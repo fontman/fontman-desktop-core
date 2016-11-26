@@ -7,3 +7,4 @@ Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 26/11/2016
 """
 
 from cache_manager.Initialize import Initialize
+from cache_manager.Manage import Manage

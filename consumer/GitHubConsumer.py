@@ -17,18 +17,28 @@ class GitHubConsumer:
         self.__repository = repository
         self.__user = user
 
-    def get_cdn_link(self, file_path, file_name):
-        return 'https://cdn.rawgit.com/' + self.__user + '/' + \
-               self.__repository + '/' + self.__branch + '/' + file_path\
-               + '/' + file_name
+    def get_cdn_link(self, file_path):
+        return "https://cdn.rawgit.com/"\
+               + self.__user + "/"\
+               + self.__repository + "/"\
+               + self.__branch + "/"\
+               + file_path
 
-    def download_file(self, destination, download_link):
-        with open(destination, 'wb') as stream:
-            stream.write(requests.get(download_link).content)
+    def download_file(self, destination, file_path):
+        with open(destination, "wb") as stream:
+            stream.write(requests.get(
+                "https://raw.githubusercontent.com/"
+                + self.__user + "/"
+                + self.__repository + "/"
+                + self.__branch + "/"
+                + file_path
+            ).content)
 
-    def list_contents(self, location=''):
-        return requests.get('https://api.github.com/repos/'
-                            + self.__user + '/'
-                            + self.__repository + '/contents/'
-                            + location + '?ref='
-                            + self.__branch).json()
+    def list_contents(self, location=""):
+        return requests.get(
+            "https://api.github.com/repos/"
+            + self.__user + "/"
+            + self.__repository + "/contents/"
+            + location + "?ref="
+            + self.__branch
+        ).json()

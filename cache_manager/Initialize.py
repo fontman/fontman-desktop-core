@@ -19,23 +19,43 @@ fms_home
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 26/11/2016
 """
 
-from model import FileManager
+from utility import FileManager
+from utility import FileStructure
 
 
 class Initialize:
 
-    def __init__(self, home_directory):
-        self.__file_manager = FileManager(home_directory)
+    def __init__(self):
+        self.__file_manager = FileManager()
+        self.__structure = FileStructure()
 
-    def proceed(self):
-        self.__file_manager.create_directory('cached_data')
+    def directories(self):
+        self.__file_manager.create_directory(
+            self.__structure.fontman_directory()
+        )
+        self.__file_manager.create_directory(
+            self.__structure.cached_data_directory()
+        )
+        self.__file_manager.create_directory(
+            self.__structure.repo_data_directory()
+        )
+        self.__file_manager.create_directory(
+            self.__structure.rollback_directory()
+        )
 
-        self.__file_manager.create_directory('repo_data')
-        self.__file_manager.create_directory('font.json', 'repo_data')
-        self.__file_manager.create_file('installed.json', 'repo_data')
-        self.__file_manager.create_file('list.json', 'repo_data')
-
-        self.__file_manager.create_directory('rollback_data')
-        self.__file_manager.create_file('rollback.json', 'rollback_data')
-
-        self.__file_manager.create_file('system.json')
+    def files(self):
+        self.__file_manager.create_file(
+            self.__structure.font_json()
+        )
+        self.__file_manager.create_file(
+            self.__structure.installed_json()
+        )
+        self.__file_manager.create_file(
+            self.__structure.list_json()
+        )
+        self.__file_manager.create_file(
+            self.__structure.rollback_json()
+        )
+        self.__file_manager.create_file(
+            self.__structure.system_json()
+        )
