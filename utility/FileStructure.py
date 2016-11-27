@@ -27,6 +27,9 @@ class FileStructure:
     def home_directory(self):
         return self.__home_directory
 
+    def index_json(self):
+        return self.__home_directory + '/.fontman/repo_data/index.json'
+
     def installed_json(self):
         return self.__home_directory + '/.fontman/repo_data/installed.json'
 
@@ -44,3 +47,6 @@ class FileStructure:
 
     def system_json(self):
         return self.__home_directory + '/.fontman/system.json'
+
+    def update_json(self):
+        return self.__home_directory + '/.fontman/repo_data/update.json'

@@ -23,7 +23,7 @@ class JsonIO:
     def open_file(self, mode):
         return open(self.__json_file, mode)    # modes - r, r+, w, w+, ...
 
-    def get_json_as_list(self, mode='r'):
+    def get_json_as_list(self, mode="r"):
         with self.open_file(mode) as file_stream:
             return json.load(file_stream)
 
@@ -36,6 +36,6 @@ class JsonIO:
 
         self.rewrite_json_data(json_list)
 
-    def rewrite_json_data(self, json_list, mode='w'):
+    def rewrite_json_data(self, json_list, mode="w"):
         with self.open_file(mode) as file_stream:
-            json.dump(json_list, file_stream, indent=2, sort_keys='id')
+            json.dump(json_list, file_stream, indent=2, sort_keys="id")

@@ -48,6 +48,9 @@ class Initialize:
             self.__structure.font_json()
         )
         self.__file_manager.create_file(
+            self.__structure.index_json()
+        )
+        self.__file_manager.create_file(
             self.__structure.installed_json()
         )
         self.__file_manager.create_file(
@@ -58,4 +61,7 @@ class Initialize:
         )
         self.__file_manager.create_file(
             self.__structure.system_json()
+        )
+        self.__file_manager.create_file(
+            self.__structure.update_json()
         )
