@@ -13,40 +13,45 @@ from os.path import expanduser
 class FileStructure:
 
     def __init__(self):
-        self.__home_directory = expanduser('~')
+        self.__home_directory = expanduser("~")
 
     def cached_data_directory(self):
-        return self.__home_directory + '/.fontman/cached_data'
+        return self.__home_directory + "/.fontman/cached_data"
 
     def fontman_directory(self):
-        return self.__home_directory + '/.fontman'
+        return self.__home_directory + "/.fontman"
 
     def font_json(self):
-        return self.__home_directory + '/.fontman/repo_data/font.json'
+        return self.__home_directory + "/.fontman/repo_data/font.json"
 
     def home_directory(self):
         return self.__home_directory
 
     def index_json(self):
-        return self.__home_directory + '/.fontman/repo_data/index.json'
+        return self.__home_directory + "/.fontman/repo_data/index.json"
 
     def installed_json(self):
-        return self.__home_directory + '/.fontman/repo_data/installed.json'
+        return self.__home_directory + "/.fontman/repo_data/installed.json"
 
     def list_json(self):
-        return self.__home_directory + '/.fontman/repo_data/list.json'
+        return self.__home_directory + "/.fontman/repo_data/list.json"
 
     def repo_data_directory(self):
-        return self.__home_directory + '/.fontman/repo_data'
+        return self.__home_directory + "/.fontman/repo_data"
 
     def rollback_directory(self):
-        return self.__home_directory + '/.fontman/rollback_data'
+        return self.__home_directory + "/.fontman/rollback_data"
 
     def rollback_json(self):
-        return self.__home_directory + '/.fontman/rollback_data/rollback.json'
+        return self.__home_directory + "/.fontman/rollback_data/rollback.json"
+
+    def system(self):
+        return JsonIO(
+            self.__home_directory + "/.fontman/system.json"
+        ).get_json_as_list()["system"]
 
     def system_json(self):
-        return self.__home_directory + '/.fontman/system.json'
+        return self.__home_directory + "/.fontman/system.json"
 
     def update_json(self):
-        return self.__home_directory + '/.fontman/repo_data/update.json'
+        return self.__home_directory + "/.fontman/repo_data/update.json"

@@ -28,6 +28,7 @@ class Index:
 
     def add_to_index(self, font_id, index_info):
         index_list = self.__jsonIO.get_json_as_list()
+
         if len(index_list) is 0:
             index_list.append({})
 
@@ -53,3 +54,5 @@ class Index:
     def update_by_font_id(self, element, font_id, value):
         index_list = self.__jsonIO.get_json_as_list()
         index_list[0][font_id][element] = value
+
+        self.__jsonIO.rewrite_json_data(index_list)

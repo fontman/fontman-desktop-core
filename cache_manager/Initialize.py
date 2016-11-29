@@ -19,8 +19,9 @@ fms_home
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 26/11/2016
 """
 
-from utility import FileManager
-from utility import FileStructure
+import getpass, os, platform
+
+from utility import FileManager, FileStructure, JsonIO
 
 
 class Initialize:
@@ -65,3 +66,25 @@ class Initialize:
         self.__file_manager.create_file(
             self.__structure.update_json()
         )
+
+    def system_settings(self):
+        font_dir = ""
+        system = platform.system()
+
+        if "linux" in system.lower():
+            font_dir = self.__structure.home_directory() + "/.fonts"
+        elif "osx" in system.lower():
+            font_dir = self.__structure.home_directory() + "/Library/Fonts"
+        elif "windows" in system.lower():
+            font_dir = os.environ["SYSTEMDRIVE"] + "\\\\Windows\\Fonts"
+
+        system_info_list = [{
+            "font_directory": font_dir,
+            "refresh": 2,
+            "system": platform.system(),
+            "username": getpass.getuser()
+        }]
+
+        JsonIO(
+            self.__structure.system_json()
+        ).rewrite_json_data(system_info_list)
