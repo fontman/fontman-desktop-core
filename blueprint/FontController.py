@@ -6,7 +6,6 @@ Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 28/11/2016
 """
 
 from flask import Blueprint, jsonify, request
-from service import Font
 
 font_blueprint = Blueprint('font_blueprint', __name__)
 font_service = Font()

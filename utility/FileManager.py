@@ -6,7 +6,7 @@ Uses shutil high level python operations library and os python library.
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 26/11/2016
 """
 
-import os, os.path, requests, shutil
+import os, os.path, requests, shutil, zipfile
 
 
 class FileManager:
@@ -20,26 +20,10 @@ class FileManager:
         except:
             raise
 
-    def create_file(self, file_path):
-        try:
-            with open(file_path, "w") as stream:
-                stream.write("[]")
-        except:
-            raise
-
-    def copy_directory(self, source, destination):
-        shutil.copytree(source, destination)
-
-    def copy_file(self, file_name, source_dir, dest_dir):
-        try:
-            shutil.copyfile(
-                source_dir + "/" + file_name,
-                dest_dir + "/" + file_name
-            )
-
-        except:
-            self.create_directory(dest_dir)
-            self.copy_file(file_name, source_dir, dest_dir)
+    def extract_file(self, compressed_file, destination):
+        if compressed_file.endswith(".zip"):
+            with zipfile.ZipFile(compressed_file) as file:
+                file.extractall(destination)
             
     def download_file(self, destination, url):
         with open(destination, "wb") as stream:
