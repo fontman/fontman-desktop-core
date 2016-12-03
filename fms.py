@@ -21,9 +21,10 @@ def run_flask_app():
 
 
 def main():
-    initialize()
+    #initialize()
     CacheManager().update_github_font_cache()
 
 
 if __name__ == '__main__':
+    #main()
     run_flask_app()

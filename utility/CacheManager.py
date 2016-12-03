@@ -9,15 +9,13 @@ Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 2/12/2016
 import requests
 
 from consumer import GitHubConsumer
-from service import ChannelService, FontIndexService, FontService, \
-    GithubFontService
+from service import ChannelService, FontService, GithubFontService
 
 
 class CacheManager:
 
     def __init__(self):
         self.__channel_service = ChannelService()
-        self.__font_index_service = FontIndexService()
         self.__font_service = FontService()
         self.__github_font_service = GithubFontService()
 
@@ -35,6 +33,25 @@ class CacheManager:
                     font["branch"], font["repository"], font["user"]
                 ).get_latest_release_info()
 
+                # update font data if font already exists
+                font_obj = self.__font_service.find_by_font_id(font["id"])
+
+                if font_obj.count() is not 0:
+                    font_obj = font_obj.one()
+
+                    # check for version updates
+                    if font_obj.installed:
+                        if font_obj.version not in latest_release["tag_name"]:
+                            self.__font_service.update_by_font_id(
+                                font["id"],
+                                {
+                                    "upgradable": True,
+                                    "version": latest_release["tag_name"]
+                                }
+                            )
+
+                    continue
+
                 # add a record in fonts directory
                 self.__font_service.add_new(
                     font["id"],
@@ -51,9 +68,4 @@ class CacheManager:
                     font["path"],
                     font["repository"],
                     font["user"]
-                )
-
-                # add a record in font index
-                self.__font_index_service.add_new(
-                    font["id"], False, False
                 )

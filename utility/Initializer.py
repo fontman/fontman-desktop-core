@@ -17,7 +17,7 @@ from utility import FileManager
 def initialize():
 
     # home directory
-    home_directory = expanduser('~')
+    home_directory = expanduser("~")
 
     # operating system
     system = platform.system()
@@ -36,12 +36,12 @@ def initialize():
     # create directories
     file_manager = FileManager()
 
-    file_manager.create_directory(home_directory + '/.fontman')
-    file_manager.create_directory(home_directory + '/.fontman/temp')
+    file_manager.create_directory(home_directory + "/.fontman")
+    file_manager.create_directory(home_directory + "/.fontman/temp")
 
     # create database
     engine = create_engine(
-        'sqlite:///' + home_directory + '/.fontman/fontman.db'
+        "sqlite:///" + home_directory + "/.fontman/fontman.db"
     )
     Base.metadata.create_all(engine)
 
@@ -50,14 +50,14 @@ def initialize():
         home_directory,
         font_directory,
         system,
-        '1h',
+        "1h",
         getpass.getuser(),
         version
     )
 
     ChannelService().add_new(
-        'fontman_free',
-        'https://raw.githubusercontent.com/fontman/fms-directory/master/list'
-        '.json',
-        'github'
+        "fontman_free",
+        "https://raw.githubusercontent.com/fontman/fms-directory/master/list"
+        ".json",
+        "github"
     )
