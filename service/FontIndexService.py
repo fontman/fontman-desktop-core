@@ -22,7 +22,7 @@ class FontIndexService:
         db_session.commit()
 
     def find_by_font_id(self, font_id):
-        return db_session.query(FontIndex).filter_by(font_id=font_id)
+        return db_session.query(FontIndex).filter_by(font_id=font_id).one()
 
     def find_all(self):
         return db_session.query(FontIndex).all()

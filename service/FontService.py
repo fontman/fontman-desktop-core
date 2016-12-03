@@ -24,6 +24,9 @@ class FontService:
         db_session.add(new_font)
         db_session.commit()
 
+    def find_all(self):
+        return db_session.query(Font).all()
+
     def find_by_font_id(self, font_id):
         return db_session.query(Font).filter_by(font_id=font_id)
 
