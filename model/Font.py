@@ -6,10 +6,11 @@ Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 2/12/2016
 """
 
 from sqlalchemy import Column, ForeignKey, String
-from sqlalchemy.ext.declarative import declarative_base
+
+from session import Base
 
 
-class Font(declarative_base()):
+class Font(Base):
 
     __tablename__ = 'font'
 
@@ -18,4 +19,5 @@ class Font(declarative_base()):
         String(10), ForeignKey('channel.channel_id'), nullable=False
     )
     name = Column(String(150), nullable=False)
+    url = Column(String(250), nullable=True)
     version = Column(String(30), nullable=False)

@@ -1,31 +1,63 @@
 """ Initializer
 
-Initialize system directories, files and create appropriate sessions.
+Initialize system directories, files and database.
 
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 2/12/2016
 """
-import os, platform
+
+import os, getpass, platform
 from os.path import expanduser
+from sqlalchemy import create_engine
+
+from service import ChannelService, SystemService
+from session import Base, version
+from utility import FileManager
 
 
-class Initializer:
+def initialize():
 
-    def __init__(self):
-        self.__home_directory = expanduser("~")
+    # home directory
+    home_directory = expanduser('~')
 
-    def cached_data_directory(self):
-        return self.__home_directory + "/.fontman/cached_data"
+    # operating system
+    system = platform.system()
 
-    def fontman_directory(self):
-        return self.__home_directory + "/.fontman"
+    # system font directory
+    font_directory = ""
 
-    def system_font_directory(self):
-        font_dir = ""
-        system = platform.system()
+    # set system font directory considering operating system type
+    if "linux" in system.lower():
+        font_directory = home_directory + "/.fonts"
+    elif "osx" in system.lower():
+        font_directory = home_directory + "/Library/Fonts"
+    elif "windows" in system.lower():
+        font_directory = os.environ["SYSTEMDRIVE"] + "\\\\Windows\\Fonts"
 
-        if "linux" in system.lower():
-            font_dir = self.__home_directory + "/.fonts"
-        elif "osx" in system.lower():
-            font_dir = self.__home_directory + "/Library/Fonts"
-        elif "windows" in system.lower():
-            font_dir = os.environ["SYSTEMDRIVE"] + "\\\\Windows\\Fonts"
+    # create directories
+    file_manager = FileManager()
+
+    file_manager.create_directory(home_directory + '/.fontman')
+    file_manager.create_directory(home_directory + '/.fontman/temp')
+
+    # create database
+    engine = create_engine(
+        'sqlite:///' + home_directory + '/.fontman/fontman.db'
+    )
+    Base.metadata.create_all(engine)
+
+    # write application initial data
+    SystemService().add_new(
+        home_directory,
+        font_directory,
+        system,
+        '1h',
+        getpass.getuser(),
+        version
+    )
+
+    ChannelService().add_new(
+        'fontman_free',
+        'https://raw.githubusercontent.com/fontman/fms-directory/master/list'
+        '.json',
+        'github'
+    )

@@ -30,5 +30,8 @@ class ChannelService:
     def find_all(self):
         return db_session.query(Channel).all()
 
+    def find_by_channel_type(self, type):
+        return db_session.query(Channel).filter_by(type=type).all()
+
     def update_by_channel_id(self, channel_id, attribute, value):
         self.find_by_channel_id(channel_id).update({attribute: value})

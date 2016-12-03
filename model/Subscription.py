@@ -6,12 +6,13 @@ Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 2/12/2016
 """
 
 from sqlalchemy import Column, String
-from sqlalchemy.ext.declarative import declarative_base
+
+from session import Base
 
 
-class Subscription(declarative_base()):
+class Subscription(Base):
 
-    __tablename__ = 'system'
+    __tablename__ = 'subscription'
 
     user_id = Column(String(50), primary_key=True)
     username = Column(String(100), nullable=False)

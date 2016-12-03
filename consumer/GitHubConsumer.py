@@ -24,15 +24,19 @@ class GitHubConsumer:
                + self.__branch + "/"\
                + file_path
 
-    def download_file(self, destination, file_path):
-        with open(destination, "wb") as stream:
-            stream.write(requests.get(
-                "https://raw.githubusercontent.com/"
-                + self.__user + "/"
-                + self.__repository + "/"
-                + self.__branch + "/"
-                + file_path
-            ).content)
+    def get_latest_release_info(self):
+        return requests.get(
+            "https://api.github.com/repos/"
+            + self.__user + '/'
+            + self.__repository + '/'
+            + 'releases/latest'
+        ).json()
+
+    def get_release_link(self, tag):
+        return "https://api.github.com/repos/"\
+               + self.__user + "/"\
+               + self.__repository + "/"\
+               + "zipball/" + tag
 
     def list_contents(self, location=""):
         return requests.get(
@@ -41,4 +45,11 @@ class GitHubConsumer:
             + self.__repository + "/contents/"
             + location + "?ref="
             + self.__branch
+        ).json()
+
+    def list_tags(self):
+        return requests.get(
+            "https://api.github.com/repos/"
+            + self.__user
+            + self.__repository + '/tags'
         ).json()

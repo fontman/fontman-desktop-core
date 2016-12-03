@@ -6,10 +6,11 @@ Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 2/12/2016
 """
 
 from sqlalchemy import Column, ForeignKey, String
-from sqlalchemy.ext.declarative import declarative_base
+
+from session import Base
 
 
-class GithubFont(declarative_base()):
+class GithubFont(Base):
 
     __tablename__ = 'github_font'
 

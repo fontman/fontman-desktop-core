@@ -1,4 +1,4 @@
-""" System service
+""" Core service
 
 High level functions to manipulate fontman application and operating system
 related data.

@@ -6,10 +6,11 @@ Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 2/12/2016
 """
 
 from sqlalchemy import Boolean, Column, ForeignKey, String
-from sqlalchemy.ext.declarative import declarative_base
+
+from session import Base
 
 
-class FontIndex(declarative_base()):
+class FontIndex(Base):
 
     __tablename__ = 'font_index'
 

@@ -7,10 +7,11 @@ Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 2/12/2016
 
 import datetime
 from sqlalchemy import Column, Date, ForeignKey, String
-from sqlalchemy.ext.declarative import declarative_base
+
+from session import Base
 
 
-class InstalledFont(declarative_base()):
+class InstalledFont(Base):
 
     __tablename__ = 'installed_font'
 

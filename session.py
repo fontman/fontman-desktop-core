@@ -1,4 +1,4 @@
-""" Session
+""" session
 
 Session variables and functions.
 
@@ -12,11 +12,16 @@ from sqlalchemy.orm import sessionmaker
 
 
 
-# Database session
+# fontman version
+version = '0.0.1-SNAPSHOT'
+
+# Database session variables
 engine = create_engine(
     'sqlite:///' + expanduser('~') + '/.fontman/fontman.db', echo =True
 )
-declarative_base().metadata.bind = engine
+Base = declarative_base()
+
+Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 
 db_session = DBSession()
