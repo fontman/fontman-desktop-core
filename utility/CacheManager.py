@@ -32,6 +32,12 @@ class CacheManager:
                 latest_release = GitHubConsumer(
                     font["branch"], font["repository"], font["user"]
                 ).get_latest_release_info()
+                release_info = None
+
+                for asset in latest_release["assets"]:
+                    if asset["content_type"] in "application/zip":
+                        release_info = asset
+                        break
 
                 # update font data if font already exists
                 font_obj = self.__font_service.find_by_font_id(font["id"])
@@ -45,7 +51,9 @@ class CacheManager:
                             self.__font_service.update_by_font_id(
                                 font["id"],
                                 {
+                                    "file_name": release_info["name"],
                                     "upgradable": True,
+                                    "url": release_info["browser_download_url"],
                                     "version": latest_release["tag_name"]
                                 }
                             )
@@ -56,8 +64,9 @@ class CacheManager:
                 self.__font_service.add_new(
                     font["id"],
                     channel.channel_id,
+                    release_info["name"],
                     font["name"],
-                    latest_release["zipball_url"],
+                    release_info["browser_download_url"],
                     latest_release["tag_name"]
                 )
 

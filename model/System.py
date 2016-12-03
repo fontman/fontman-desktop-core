@@ -16,6 +16,7 @@ class System(Base):
 
     system_user = Column(String(150), primary_key=True)
     home_directory = Column(String(250), nullable=False)
+    font_directory = Column(String(250), nullable=False)
     fontman_home = Column(String(250), nullable=False)
     platform = Column(String(10), nullable=False)
     refresh_rate = Column(String(5), default='1h', nullable=False)

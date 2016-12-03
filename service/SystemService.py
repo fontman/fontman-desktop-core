@@ -15,6 +15,7 @@ class SystemService:
     def add_new(
             self,
             home_directory,
+            font_directory,
             fontman_home,
             platform,
             refresh_rate,
@@ -23,6 +24,7 @@ class SystemService:
     ):
         new_system = System(
             home_directory=home_directory,
+            font_directory = font_directory,
             fontman_home=fontman_home,
             platform=platform,
             refresh_rate=refresh_rate,

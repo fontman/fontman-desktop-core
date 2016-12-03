@@ -18,6 +18,7 @@ class Font(Base):
     channel_id = Column(
         String(10), ForeignKey("channel.channel_id"), nullable=False
     )
+    file_name = Column(String(250), nullable=False)
     installed = Column(Boolean, default=False)
     name = Column(String(150), nullable=False)
     url = Column(String(250), nullable=True)

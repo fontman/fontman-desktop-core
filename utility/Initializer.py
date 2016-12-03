@@ -25,6 +25,9 @@ def initialize():
     # system font directory
     font_directory = ""
 
+    # fontman home directory
+    fontman_home = home_directory + "/.fontman"
+
     # set system font directory considering operating system type
     if "linux" in system.lower():
         font_directory = home_directory + "/.fonts"
@@ -38,6 +41,7 @@ def initialize():
 
     file_manager.create_directory(home_directory + "/.fontman")
     file_manager.create_directory(home_directory + "/.fontman/temp")
+    file_manager.create_directory(home_directory + "/.fontman/temp/extracted")
 
     # create database
     engine = create_engine(
@@ -49,6 +53,7 @@ def initialize():
     SystemService().add_new(
         home_directory,
         font_directory,
+        fontman_home,
         system,
         "1h",
         getpass.getuser(),

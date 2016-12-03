@@ -26,7 +26,7 @@ class FileManager:
                 file.extractall(destination)
             
     def download_file(self, destination, url):
-        with open(destination, "wb") as stream:
+        with open(destination, "wb+") as stream:
             stream.write(requests.get(url).content)
 
     def is_dir_exists(self, path):
@@ -48,3 +48,9 @@ class FileManager:
         except:
             self.create_directory(dest_dir)
             self.move_file(file_name, source_dir, dest_dir)
+
+    def move_files(self, file_type,  source, destination):
+        for root, dirs, files in os.walk(source):
+            for file in files:
+                if file.endswith(file_type):
+                    self.move_file(file, root, destination)
