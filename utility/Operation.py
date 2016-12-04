@@ -73,6 +73,30 @@ class Operation:
         self.__file_manager.remove_directory(self.__temp_extracted)
         self.__file_manager.remove_directory(self.__temp_dir + font.file_name)
 
+    def remove_font(self, font_id):
+        # remove files list
+        files_list = self.__font_files.find_all_by_font_id(font_id)
+
+        for file in files_list:
+            self.__file_manager.remove_file(
+                self.__system_font_dir + "/" + file.file_name
+            )
+
+        # remove font file indexes
+        self.__font_files.delete_by_font_id(font_id)
+
+        # remove installed font index
+        self.__installed_fonts.delete_by_font_id(font_id)
+
+        # set font installed index and upgradable indexes
+        self.__fonts.update_by_font_id(
+            font_id,
+            {
+                "installed": False,
+                "upgradable": False
+            }
+        )
+        
     def update_font(self, font_id):
         font = self.__fonts.find_by_font_id(font_id).one()
         self.download_and_extract(font)
@@ -92,3 +116,7 @@ class Operation:
 
         # update font upgradable index
         self.__fonts.update_by_font_id(font_id, {"upgradable": False})
+
+        # clean workspace directories
+        self.__file_manager.remove_directory(self.__temp_extracted)
+        self.__file_manager.remove_directory(self.__temp_dir + font.file_name)
