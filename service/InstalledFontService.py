@@ -19,11 +19,19 @@ class InstalledFontService:
             version=version
         )
 
+        db_session.add(new_installed_font)
+        db_session.commit()
+
+    def delete_by_font_id(self, font_id):
+        self.find_by_font_id(font_id).delete()
+        db_session.commit()
+
     def find_all(self):
         db_session.query(InstalledFont).all()
 
     def find_by_font_id(self, font_id):
         return db_session.query(InstalledFont).filter_by(font_id=font_id)
 
-    def update_by_font_id(self, font_id, attribute, value):
-        self.find_by_font_id(font_id).update({attribute, value})
+    def update_by_font_id(self, font_id, update_list):
+        self.find_by_font_id(font_id).update(update_list)
+        db_session.commit()

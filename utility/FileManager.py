@@ -49,8 +49,8 @@ class FileManager:
             self.create_directory(dest_dir)
             self.move_file(file_name, source_dir, dest_dir)
 
-    def move_files(self, file_type,  source, destination):
-        for root, dirs, files in os.walk(source):
-            for file in files:
-                if file.endswith(file_type):
-                    self.move_file(file, root, destination)
+    def remove_directory(self, directory_path):
+        shutil.rmtree(directory_path)
+
+    def remove_file(self, file_path):
+        os.remove(file_path)

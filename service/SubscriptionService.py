@@ -23,6 +23,10 @@ class SubscriptionService:
         db_session.add(new_subscription)
         db_session.commit()
 
+    def delete_by_username(self, username):
+        self.find_by_user_name(username).delete()
+        db_session.commit()
+
     def find_all(self):
         db_session.query(Subscription).all()
 
@@ -31,3 +35,4 @@ class SubscriptionService:
 
     def update_by_username(self, username, attribute, value):
         self.find_by_user_name(username).update({attribute: value})
+        db_session.commit()

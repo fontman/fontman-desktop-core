@@ -12,7 +12,6 @@ from session import db_session
 class FontService:
 
     def add_new(self, font_id, channel_id, file_name, name, url, version):
-
         new_font = Font(
             font_id=font_id,
             channel_id = channel_id,
@@ -47,3 +46,4 @@ class FontService:
 
     def update_by_font_id(self, font_id, update_list):
         self.find_by_font_id(font_id).update(update_list)
+        db_session.commit()

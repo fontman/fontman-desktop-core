@@ -12,7 +12,6 @@ from session import db_session
 class ChannelService:
 
     def add_new(self, channel_id, base_url, type, license_key=None):
-
         new_channel = Channel(
             channel_id=channel_id,
             base_url=base_url,
@@ -22,6 +21,10 @@ class ChannelService:
         )
 
         db_session.add(new_channel)
+        db_session.commit()
+
+    def delete_by_channel_id(self, channel_id):
+        self.find_by_channel_id(channel_id).delete()
         db_session.commit()
 
     def find_by_channel_id(self, channel_id):
@@ -35,3 +38,4 @@ class ChannelService:
 
     def update_by_channel_id(self, channel_id, attribute, value):
         self.find_by_channel_id(channel_id).update({attribute: value})
+        db_session.commit()
