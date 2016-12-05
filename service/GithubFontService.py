@@ -12,12 +12,13 @@ from session import db_session
 
 class GithubFontService:
 
-    def add_new(self, font_id, branch, path, repo_name, user):
+    def add_new(self, font_id, branch, path, repo_name, sample, user):
         new_github_font = GithubFont(
             font_id=font_id,
             branch=branch,
             path=path,
             repo_name=repo_name,
+            sample=sample,
             user=user
         )
 

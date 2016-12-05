@@ -25,7 +25,7 @@ def run_flask_app():
 def main():
     initialize()
     CacheManager().update_github_font_cache()
-    Operation().install_font("abhaya")
+    # Operation().install_font("abhaya")
 
 
 if __name__ == '__main__':

@@ -13,3 +13,4 @@ from service.GithubFontService import GithubFontService
 from service.InstalledFontService import InstalledFontService
 from service.SubscriptionService import SubscriptionService
 from service.SystemService import SystemService
+from service.WebLinkService import WebLinkService

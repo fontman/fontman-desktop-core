@@ -12,3 +12,4 @@ from model.GithubFont import GithubFont
 from model.InstalledFont import InstalledFont
 from model.Subscription import Subscription
 from model.System import System
+from model.WebLink import WebLink

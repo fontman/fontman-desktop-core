@@ -18,4 +18,5 @@ class GithubFont(Base):
     branch = Column(String(100), nullable=False)
     path = Column(String(250), nullable=False)
     repo_name = Column(String(250), nullable=False)
+    sample = Column(String(250), nullable=False)
     user = Column(String(100), nullable=False)

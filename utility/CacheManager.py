@@ -9,7 +9,8 @@ Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 2/12/2016
 import requests
 
 from consumer import GitHubConsumer
-from service import ChannelService, FontService, GithubFontService
+from service import ChannelService, FontService, GithubFontService, \
+    WebLinkService
 
 
 class CacheManager:
@@ -76,5 +77,26 @@ class CacheManager:
                     font["branch"],
                     font["path"],
                     font["repository"],
+                    font["sample"],
                     font["user"]
                 )
+
+                # generate cdn links using provided branch(probably gh-pages)
+                consumer = GitHubConsumer(
+                    font["branch"],
+                    font["repository"],
+                    font["user"]
+                )
+
+                contents_list = consumer.list_contents(font["path"])
+                web_links = WebLinkService()
+
+                for file in contents_list:
+                    if file["name"].endswith(".otf"):
+                        web_links.add_new(
+                            file["name"].split(".")[0],
+                            font["id"],
+                            consumer.get_cdn_link(
+                                font["path"] + "/" + file["name"]
+                            )
+                        )
