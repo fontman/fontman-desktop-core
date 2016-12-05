@@ -11,12 +11,13 @@ from utility import CacheManager
 from utility import initialize
 from utility import Operation
 
-from blueprint import font_blueprint
+from blueprint import font_blueprint, operation_blueprint
 
 
 def run_flask_app():
     fms = Flask(__name__)
     fms.register_blueprint(font_blueprint)
+    fms.register_blueprint(operation_blueprint)
 
     fms.run(debug=True, host="0.0.0.0")
 

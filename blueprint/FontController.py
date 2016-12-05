@@ -1,6 +1,6 @@
 """ Font controller
 
-Provides flask blueprints using Font service.
+Provides flask blueprint using Font service.
 
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 28/11/2016
 """

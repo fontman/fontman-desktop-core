@@ -30,10 +30,10 @@ class FontFileService:
         db_session.commit()
 
     def find_all(self):
-        db_session.query(FontFile).all()
+        return db_session.query(FontFile).all()
 
     def find_all_by_font_id(self, font_id):
-        db_session.query(FontFile).filter_by(font_id=font_id)
+        return db_session.query(FontFile).filter_by(font_id=font_id)
 
     def find_by_file_name(self, file_name, font_id):
         return db_session.query(FontFile).filter_by(

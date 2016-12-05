@@ -70,8 +70,10 @@ class Operation:
         )
 
         # clean workspace directories
-        self.__file_manager.remove_directory(self.__temp_extracted)
-        self.__file_manager.remove_directory(self.__temp_dir + font.file_name)
+        self.__file_manager.remove_directory(self.__temp_dir)
+        self.__file_manager.create_directory(self.__temp_dir)
+
+        return self.return_on_success(font_id)
 
     def remove_font(self, font_id):
         # remove files list
@@ -96,7 +98,16 @@ class Operation:
                 "upgradable": False
             }
         )
-        
+
+        return True
+
+    def return_on_success(self, font_id):
+        status = self.__installed_fonts.find_by_font_id(font_id).one()
+        return {
+            "font_id": status.font_id,
+            "version": status.version
+        }
+
     def update_font(self, font_id):
         font = self.__fonts.find_by_font_id(font_id).one()
         self.download_and_extract(font)
@@ -120,3 +131,5 @@ class Operation:
         # clean workspace directories
         self.__file_manager.remove_directory(self.__temp_extracted)
         self.__file_manager.remove_directory(self.__temp_dir + font.file_name)
+
+        return self.return_on_success(font_id)

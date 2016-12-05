@@ -32,3 +32,4 @@ class GithubFontService:
 
     def update_by_font_id(self, font_id, attribute, value):
         self.find_by_font_id(font_id).update({attribute: value})
+        db_session.commit()
