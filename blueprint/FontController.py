@@ -5,20 +5,28 @@ Provides flask blueprint using Font service.
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 28/11/2016
 """
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify
 
-from service import FontService, GithubFontService, WebLinkService
+from service import FontService, WebLinkService
 
 font_blueprint = Blueprint('font_blueprint', __name__)
 
 
 def get_json_list(font_list_object):
     font_list = []
+    web_links = WebLinkService()
 
     for font_object in font_list_object:
+        web_link = web_links.find_by_style(
+            font_object.font_id,
+            font_object.regular_style
+        ).one().web_link
+
         font_list.append({
             "font_id": font_object.font_id,
             "name": font_object.name,
+            "sample": font_object.sample,
+            "web_link": web_link,
             "version": font_object.version
         })
 
@@ -45,18 +53,6 @@ def get_all_upgradable():
     return get_json_list(FontService().find_all_upgradable())
 
 
-@font_blueprint.route('/font/sample/<font_id>')
-def get_sample_text(font_id):
-    sample_text = GithubFontService().find_by_font_id(font_id).one().sample
-
-    return jsonify(
-        {
-            "font_id": font_id,
-            "sample": sample_text
-        }
-    )
-
-
 @font_blueprint.route('/font/web_link/<font_id>')
 def get_web_links(font_id):
     json_list = []
@@ -66,6 +62,7 @@ def get_web_links(font_id):
             {
                 "font_id": link.font_id,
                 "file_name": link.file_name,
+                "style": link.style,
                 "web_link": link.web_link
             }
         )

@@ -21,6 +21,8 @@ class Font(Base):
     file_name = Column(String(250), nullable=False)
     installed = Column(Boolean, default=False)
     name = Column(String(150), nullable=False)
+    regular_style = Column(String(50), nullable=False)
+    sample = Column(String(250), nullable=False)
     url = Column(String(250), nullable=True)
     upgradable = Column(Boolean, default=False)
     version = Column(String(30), nullable=False)

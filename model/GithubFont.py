@@ -15,8 +15,7 @@ class GithubFont(Base):
     __tablename__ = 'github_font'
 
     font_id = Column(String(50), ForeignKey('font.font_id'), primary_key=True)
-    branch = Column(String(100), nullable=False)
-    path = Column(String(250), nullable=False)
     repo_name = Column(String(250), nullable=False)
-    sample = Column(String(250), nullable=False)
+    style_branch = Column(String(100), nullable=False)
+    style_path = Column(String(250), nullable=False)
     user = Column(String(100), nullable=False)

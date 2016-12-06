@@ -17,4 +17,6 @@ class WebLink(Base):
     id = Column(Integer, primary_key=True)
     file_name = Column(String(250), nullable=False)
     font_id = Column(String(50), ForeignKey("font.font_id"), nullable=False)
+    style = Column(String(50), nullable=False)
+    type = Column(String(10), nullable=False)
     web_link = Column(String(250), nullable=False)

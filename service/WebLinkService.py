@@ -11,10 +11,12 @@ from session import db_session
 
 class WebLinkService:
 
-    def add_new(self, file_name, font_id, web_link):
+    def add_new(self, file_name, font_id, style, type, web_link):
         new_web_link = WebLink(
             file_name=file_name,
             font_id=font_id,
+            style=style,
+            type=type,
             web_link=web_link
         )
 
@@ -28,6 +30,12 @@ class WebLinkService:
         return db_session.query(WebLink).filter_by(
             file_name=file_name,
             font_id=font_id
+        )
+
+    def find_by_style(self, font_id, style):
+        return db_session.query(WebLink).filter_by(
+            font_id = font_id,
+            style=style
         )
 
     def find_all_by_font_id(self, font_id):

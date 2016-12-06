@@ -9,16 +9,18 @@ Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 2/12/2016
 import requests
 
 from consumer import GitHubConsumer
-from service import ChannelService, FontService, GithubFontService, \
-    WebLinkService
+from service import ChannelService, FontLanguageService, FontService, \
+    GithubFontService, LanguageService, WebLinkService
 
 
 class CacheManager:
 
     def __init__(self):
         self.__channel_service = ChannelService()
+        self.__font_languages = FontLanguageService()
         self.__font_service = FontService()
         self.__github_font_service = GithubFontService()
+        self.__languages = LanguageService()
 
     def update_github_font_cache(self):
         channels = self.__channel_service.find_by_channel_type("github")
@@ -31,7 +33,7 @@ class CacheManager:
             for font in fonts_list:
                 # get font data using github API
                 latest_release = GitHubConsumer(
-                    font["branch"], font["repository"], font["user"]
+                    font["style_branch"], font["repository"], font["user"]
                 ).get_latest_release_info()
                 release_info = None
 
@@ -67,36 +69,57 @@ class CacheManager:
                     channel.channel_id,
                     release_info["name"],
                     font["name"],
+                    font["style_regular"],
+                    font["sample"],
                     release_info["browser_download_url"],
                     latest_release["tag_name"]
                 )
 
+                # update languages data
+                for value in font["languages"]:
+                    language = self.__languages.find_by_value(value)
+
+                    # add language if it's not in the database
+                    if language.count() is 0:
+                        self.__languages.add_new(value)
+
+                        # add font languages details
+                        self.__font_languages.add_new(
+                           font["id"],
+                            self.__languages.find_by_value(value).one().id
+                        )
+
+                    else:
+                        self.__font_languages.add_new(
+                            font["id"],
+                            self.__languages.find_by_value(value).one().id
+                        )
+
                 # add a detailed infromation record in github fonts table
                 self.__github_font_service.add_new(
                     font["id"],
-                    font["branch"],
-                    font["path"],
                     font["repository"],
-                    font["sample"],
+                    font["style_branch"],
+                    font["style_path"],
                     font["user"]
                 )
 
                 # generate cdn links using provided branch(probably gh-pages)
                 consumer = GitHubConsumer(
-                    font["branch"],
+                    font["style_branch"],
                     font["repository"],
                     font["user"]
                 )
 
-                contents_list = consumer.list_contents(font["path"])
                 web_links = WebLinkService()
 
-                for file in contents_list:
-                    if file["name"].endswith(".otf"):
-                        web_links.add_new(
-                            file["name"].split(".")[0],
-                            font["id"],
-                            consumer.get_cdn_link(
-                                font["path"] + "/" + file["name"]
-                            )
+                for style in font["styles"]:
+                    web_links.add_new(
+                        style["file_name"],
+                        font["id"],
+                        style["style"],
+                        style["type"],
+                        consumer.get_cdn_link(
+                            font["style_path"] + "/" + style["file_name"]
                         )
+                    )

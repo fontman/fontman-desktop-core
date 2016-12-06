@@ -11,13 +11,18 @@ from session import db_session
 
 class FontService:
 
-    def add_new(self, font_id, channel_id, file_name, name, url, version):
+    def add_new(
+            self, font_id, channel_id, file_name, name, regular_style, sample,
+            url, version
+    ):
         new_font = Font(
             font_id=font_id,
             channel_id = channel_id,
             file_name=file_name,
             installed=False,
             name=name,
+            regular_style=regular_style,
+            sample=sample,
             url=url,
             upgradable=False,
             version=version
