@@ -14,6 +14,7 @@ font_blueprint = Blueprint('font_blueprint', __name__)
 
 def get_json_list(font_list_object):
     font_list = []
+    status_color = "#57acf5"
     web_links = WebLinkService()
 
     for font_object in font_list_object:
@@ -22,12 +23,21 @@ def get_json_list(font_list_object):
             font_object.regular_style
         ).one().web_link
 
+        # set font status color
+        if font_object.installed and font_object.upgradable:
+            status_color = "#fdbc40"
+        elif font_object.installed:
+            status_color = "#34c84a"
+
         font_list.append({
             "font_id": font_object.font_id,
+            "installed": font_object.installed,
             "name": font_object.name,
             "sample": font_object.sample,
+            "status_color": status_color,
+            "upgradable": font_object.upgradable,
+            "version": font_object.version,
             "web_link": web_link,
-            "version": font_object.version
         })
 
     return jsonify(font_list)
