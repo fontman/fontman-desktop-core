@@ -19,13 +19,13 @@ def run_flask_app():
     fms.register_blueprint(font_blueprint)
     fms.register_blueprint(operation_blueprint)
 
-    fms.run(debug=True, host="0.0.0.0")
+    fms.run(debug=True, host="0.0.0.0", threaded=True)
 
 
 def main():
     initialize()
     CacheManager().update_github_font_cache()
-    # Operation().install_font("abhaya")
+    # Operation().remove_font("post")
 
 
 if __name__ == '__main__':

@@ -23,7 +23,7 @@ class Operation:
 
         self.__system_font_dir = self.__system_info.font_directory
         self.__temp_dir = self.__system_info.fontman_home + '/temp/'
-        self.__temp_extracted = self.__temp_dir + "extracted"
+        self.__temp_extracted = self.__temp_dir + "extracted/"
 
     def download_and_extract(self, font):
         # download font
@@ -34,31 +34,33 @@ class Operation:
 
         # extract zip file
         self.__file_manager.extract_file(
-            self.__temp_dir + font.file_name, self.__temp_extracted
+            self.__temp_dir + font.file_name,
+            self.__temp_extracted + font.font_id
         )
 
-    def install(self, file_type, font_id, version):
+    def install(self, file_type, font_id):
         # move files to system font directory
-        for root, dirs, files in os.walk(self.__temp_extracted):
+        for root, dirs, files in os.walk(self.__temp_extracted + font_id):
             for file in files:
-                if file.endswith(".otf"):
+                if file.endswith(file_type):
                     self.__file_manager.move_file(
                         file, root, self.__system_font_dir
                     )
 
                     # tracking installed font files
-                    self.__font_files.add_new(file, font_id, version)
+                    self.__font_files.add_new(file, font_id, file_type)
 
     def install_font(self, font_id):
         font = self.__fonts.find_by_font_id(font_id).one()
         self.download_and_extract(font)
-        self.install(".otf", font.font_id, font.version)
+        self.install(".ttf", font.font_id)
 
         # update font installed index
         self.__fonts.update_by_font_id(
             font.font_id,
             {
                 "installed": True
+
             }
         )
 

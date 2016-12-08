@@ -50,7 +50,13 @@ class FileManager:
             self.move_file(file_name, source_dir, dest_dir)
 
     def remove_directory(self, directory_path):
-        shutil.rmtree(directory_path)
+        try:
+            shutil.rmtree(directory_path)
+        except:
+            print(
+                directory_path
+                + " does not exists or already has been removed"
+            )
 
     def remove_file(self, file_path):
         os.remove(file_path)

@@ -11,11 +11,11 @@ from session import db_session
 
 class FontFileService:
 
-    def add_new(self, file_name, font_id, version):
+    def add_new(self, file_name, font_id, type):
         new_font_file = FontFile(
             file_name =file_name,
             font_id = font_id,
-            version = version
+            type=type
         )
 
         db_session.add(new_font_file)
@@ -39,11 +39,3 @@ class FontFileService:
         return db_session.query(FontFile).filter_by(
             file_name=file_name, font_id=font_id
         )
-
-    def update_by_font_name(self, file_name, font_id, version):
-        self.find_by_file_name(file_name, font_id).update(
-            {
-                "version": version
-            }
-        )
-        db_session.commit()
