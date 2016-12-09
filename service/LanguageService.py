@@ -11,8 +11,8 @@ from session import db_session
 
 class LanguageService:
 
-    def add_new(self, value):
-        new_language = Language(value=value)
+    def add_new(self, is_enabled, value):
+        new_language = Language(is_enabled=is_enabled, value=value)
 
         db_session.add(new_language)
         db_session.commit()
@@ -20,11 +20,18 @@ class LanguageService:
     def find_all(self):
         return db_session.query(Language).all()
 
+    def find_all_enabled(self):
+        return db_session.query(Language).filter_by(is_enabled=True).all()
+
     def find_by_id(self, id):
         return db_session.query(Language).filter_by(id=id)
 
     def find_by_value(self, value):
         return db_session.query(Language).filter_by(value=value)
+
+    def update_by_id(self, id, update_list):
+        self.find_by_id(id).update(update_list)
+        db_session.commit()
 
     def update_by_value(self, value, update_list):
         self.find_by_value(value).update(update_list)

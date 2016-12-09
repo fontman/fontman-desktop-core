@@ -81,7 +81,7 @@ class CacheManager:
 
                     # add language if it's not in the database
                     if language.count() is 0:
-                        self.__languages.add_new(value)
+                        self.__languages.add_new(True, value)
 
                         # add font languages details
                         self.__font_languages.add_new(

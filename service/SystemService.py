@@ -37,3 +37,7 @@ class SystemService:
 
     def find_system_info(self):
         return db_session.query(System).first()
+
+    def update_data(self, update_list):
+        db_session.query(System).update(update_list)
+        db_session.commit()
