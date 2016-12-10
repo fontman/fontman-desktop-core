@@ -7,16 +7,35 @@ Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 28/11/2016
 
 from flask import Blueprint, jsonify
 
-from service import FontService, WebLinkService
+from service import FontLanguageService, FontService, LanguageService, \
+    WebLinkService
 
 font_blueprint = Blueprint('font_blueprint', __name__)
 
 
 def get_json_list(font_list_object):
+    enabled_languages_id_list = []
+    fonts = FontService()
+    font_id_list = []
+    font_languages = FontLanguageService()
     font_list = []
     web_links = WebLinkService()
 
+    # collect enabled languages ids
+    for language in LanguageService().find_all_enabled():
+        enabled_languages_id_list.append(language.id)
+
+    # collect font ids to display
+    for language_id in enabled_languages_id_list:
+        for element in font_languages.find_by_language_id(language_id):
+            if element.font_id in font_id_list:
+                continue
+            font_id_list.append(element.font_id)
+
     for font_object in font_list_object:
+        if font_object.font_id not in font_id_list:
+            continue
+
         web_link = web_links.find_by_style(
             font_object.font_id,
             font_object.regular_style

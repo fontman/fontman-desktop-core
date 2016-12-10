@@ -4,8 +4,9 @@ manipulate supported languages data.
 
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 6/12/2016
 """
+from sqlalchemy.orm import contains_eager
 
-from model import FontLanguage
+from model import FontLanguage, Language
 from session import db_session
 
 

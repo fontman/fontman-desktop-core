@@ -116,7 +116,7 @@ class Operation:
 
         # install font files and update font files index
         self.__font_files.delete_by_font_id(font_id)
-        self.install(".otf", font_id, font.version)
+        self.install(".otf", font_id)
 
         # update installed fonts version information
         self.__installed_fonts.update_by_font_id(
