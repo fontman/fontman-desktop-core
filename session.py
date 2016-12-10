@@ -12,11 +12,11 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
 # fontman version
-version = '0.0.1-SNAPSHOT'
+version = '0.1.0-SNAPSHOT'
 
 # Database session variables
 engine = create_engine(
-    'sqlite:///' + expanduser('~') + '/.fontman/fontman.db',
+    'sqlite:///./data/fontman.db',
     connect_args={'check_same_thread': False},
     poolclass=StaticPool, echo =True,
 )

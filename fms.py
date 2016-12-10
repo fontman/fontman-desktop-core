@@ -6,10 +6,10 @@ Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 3/12/2016
 """
 
 from flask import Flask
+import sys
 
 from utility import CacheManager
 from utility import initialize
-from utility import Operation
 
 from blueprint import about_blueprint, channel_blueprint, font_blueprint, \
     operation_blueprint, preference_blueprint
@@ -26,12 +26,17 @@ def run_flask_app():
     fms.run(debug=True, host="0.0.0.0", threaded=True)
 
 
-def main():
-    initialize()
-    CacheManager().update_github_font_cache()
-    # Operation().remove_font("post")
+def main(argv):
+    for arg in argv:
+        print(arg)
+
+        if "init" in arg:
+            initialize()
+            CacheManager().update_github_font_cache()
+
+        if "start" in argv:
+            run_flask_app()
 
 
 if __name__ == '__main__':
-    # main()
-    run_flask_app()
+    main(sys.argv[1:])

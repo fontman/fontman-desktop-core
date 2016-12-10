@@ -26,7 +26,7 @@ def initialize():
     font_directory = ""
 
     # fontman home directory
-    fontman_home = home_directory + "/.fontman"
+    fontman_home = "data"
 
     # set system font directory considering operating system type
     if "linux" in system.lower():
@@ -39,13 +39,13 @@ def initialize():
     # create directories
     file_manager = FileManager()
 
-    file_manager.create_directory(home_directory + "/.fontman")
-    file_manager.create_directory(home_directory + "/.fontman/temp")
-    file_manager.create_directory(home_directory + "/.fontman/temp/extracted")
+    file_manager.create_directory(fontman_home)
+    file_manager.create_directory(fontman_home + "/temp")
+    file_manager.create_directory(fontman_home + "/temp/extracted")
 
     # create database
     engine = create_engine(
-        "sqlite:///" + home_directory + "/.fontman/fontman.db"
+        "sqlite:///./data/fontman.db"
     )
     Base.metadata.create_all(engine)
 
