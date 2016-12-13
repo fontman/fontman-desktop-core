@@ -9,7 +9,8 @@ from model.Channel import Channel
 from model.Font import Font
 from model.FontFile import FontFile
 from model.FontLanguage import FontLanguage
-from model.GithubFont import GithubFont
+from model.GitHubFont import GitHubFont
+from model.GitLabFont import GitLabFont
 from model.InstalledFont import InstalledFont
 from model.Language import Language
 from model.Subscription import Subscription

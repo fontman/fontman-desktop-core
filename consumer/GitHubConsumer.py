@@ -2,7 +2,7 @@
 
 Helps to access GitHub API to gather data, download data and generate cdn links
 for appropriate fonts.
-Uses requests library.
+Uses python requests library.
 
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 26/11/2016
 """

@@ -8,3 +8,4 @@ Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 26/11/2016
 """
 
 from consumer.GitHubConsumer import GitHubConsumer
+from consumer.GitLabConsumer import GitLabConsumer

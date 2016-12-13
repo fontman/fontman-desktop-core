@@ -30,12 +30,20 @@ class ChannelService:
     def find_by_channel_id(self, channel_id):
         return db_session.query(Channel).filter_by(channel_id=channel_id)
 
+    def find_enabled_by_channel_id(self, channel_id):
+        try:
+            return db_session.query(Channel).filter_by(
+                channel_id=channel_id, is_active=True
+            ).one().is_active
+        except:
+            return False
+
     def find_all(self):
         return db_session.query(Channel).all()
 
     def find_by_channel_type(self, type):
         return db_session.query(Channel).filter_by(type=type).all()
 
-    def update_by_channel_id(self, channel_id, attribute, value):
-        self.find_by_channel_id(channel_id).update({attribute: value})
+    def update_by_channel_id(self, channel_id, update_list):
+        self.find_by_channel_id(channel_id).update(update_list)
         db_session.commit()

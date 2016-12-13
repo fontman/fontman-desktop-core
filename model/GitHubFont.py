@@ -1,4 +1,4 @@
-""" Github font
+""" GitHub font
 
 Font information related to github hosted fonts.
 
@@ -10,7 +10,7 @@ from sqlalchemy import Column, ForeignKey, String
 from session import Base
 
 
-class GithubFont(Base):
+class GitHubFont(Base):
 
     __tablename__ = 'github_font'
 

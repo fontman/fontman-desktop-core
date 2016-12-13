@@ -27,6 +27,7 @@ class LanguageService:
         return db_session.query(Language).filter_by(id=id)
 
     def find_by_value(self, value):
+        print(value)
         return db_session.query(Language).filter_by(value=value)
 
     def update_by_id(self, id, update_list):

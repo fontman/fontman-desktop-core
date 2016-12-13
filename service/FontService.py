@@ -13,7 +13,7 @@ class FontService:
 
     def add_new(
             self, font_id, channel_id, file_name, name, regular_style, sample,
-            url, version
+            type, url, version
     ):
         new_font = Font(
             font_id=font_id,
@@ -23,6 +23,7 @@ class FontService:
             name=name,
             regular_style=regular_style,
             sample=sample,
+            type=type,
             url=url,
             upgradable=False,
             version=version

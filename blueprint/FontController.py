@@ -7,15 +7,15 @@ Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 28/11/2016
 
 from flask import Blueprint, jsonify
 
-from service import FontLanguageService, FontService, LanguageService, \
-    WebLinkService
+from service import ChannelService, FontLanguageService, FontService, \
+    LanguageService, WebLinkService
 
 font_blueprint = Blueprint('font_blueprint', __name__)
 
 
 def get_json_list(font_list_object):
+    channels = ChannelService()
     enabled_languages_id_list = []
-    fonts = FontService()
     font_id_list = []
     font_languages = FontLanguageService()
     font_list = []
@@ -33,6 +33,11 @@ def get_json_list(font_list_object):
             font_id_list.append(element.font_id)
 
     for font_object in font_list_object:
+        # skip font if channel is disabled
+        if not channels.find_enabled_by_channel_id(font_object.channel_id):
+            continue
+
+        # skip font if it is disabled by languages
         if font_object.font_id not in font_id_list:
             continue
 
