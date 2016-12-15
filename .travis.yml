@@ -1,0 +1,31 @@
+language: objective-c
+python:
+- '3.5'
+before_install:
+- which python
+- brew install python --universal --framework
+- brew install wget
+- which python
+- python --version
+- pip install flask
+- pip install requests
+- pip install sqlalchemy
+- pip install pyinstaller
+- pyinstaller --onefile fms.py
+- ls
+- hdiutil create dist/fms.dmg -srcfolder dist/ -ov
+- zip -r dist/fms.zip dist/fms.app
+- ls dist/
+install: true
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key: b02f9739adf601a764fa0457a270719b8bdb551d
+    secure:
+  file:
+    - "dist/fms.dmg"
+    - "dist/fms.zip"
+  on:
+    tags: true
+    all_branches: true
+    repo: fontman/fms
