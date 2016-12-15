@@ -11,6 +11,12 @@ from service import FontFileService, FontService, InstalledFontService, \
     SystemService
 from utility import FileManager
 
+# conditional imports for windows platform
+if SystemService().find_system_info().platform in "Windows":
+    import win32api
+    import win32con
+    import ctypes
+
 
 class Operation:
 
@@ -38,6 +44,19 @@ class Operation:
             self.__temp_extracted + font.font_id
         )
 
+    def fix_windows_installations(self, file_type, font_id):
+        for root, dirs, files in os.walk(self.__temp_extracted + font_id):
+            for file in files:
+                if file.endswith(file_type):
+                    ctypes.windll.gdi32.AddFontResourceA(
+                        os.path.join(root, file)
+                    )
+
+                    # tracking installed font files
+                    self.__font_files.add_new(file, font_id, file_type)
+
+        win32api.SendMessage(win32con.HWND_BROADCAST, win32con.WM_FONTCHANGE)
+
     def install(self, file_type, font_id):
         # move files to system font directory
         for root, dirs, files in os.walk(self.__temp_extracted + font_id):
@@ -53,7 +72,12 @@ class Operation:
     def install_font(self, font_id):
         font = self.__fonts.find_by_font_id(font_id).one()
         self.download_and_extract(font)
-        self.install(".ttf", font.font_id)
+
+        if self.__system_info.platform in "Windows":
+            self.fix_windows_installations("ttf", font.font_id)
+
+        else:
+            self.install(".ttf", font.font_id)
 
         # update font installed index
         self.__fonts.update_by_font_id(
@@ -71,20 +95,28 @@ class Operation:
             font.version
         )
 
-        # clean workspace directories
-        self.__file_manager.remove_directory(self.__temp_dir)
-        self.__file_manager.create_directory(self.__temp_dir)
-
         return self.return_on_success(font_id)
+
+    def remove_fix_on_windows(self, font_id):
+        return
 
     def remove_font(self, font_id):
         # remove files list
         files_list = self.__font_files.find_all_by_font_id(font_id)
 
-        for file in files_list:
-            self.__file_manager.remove_file(
-                self.__system_font_dir + "/" + file.file_name
-            )
+        if self.__system_info.platform in "Windows":
+            self.remove_fix_on_windows(font_id)
+
+        else:
+            for file in files_list:
+                self.__file_manager.remove_file(
+                    self.__system_font_dir + "/" + file.file_name
+                )
+
+        # clean font cache
+        self.__file_manager.remove_directory(
+            self.__temp_extracted + "/" + font_id
+        )
 
         # remove font file indexes
         self.__font_files.delete_by_font_id(font_id)
@@ -111,12 +143,22 @@ class Operation:
         }
 
     def update_font(self, font_id):
+        # clean font cache
+        self.__file_manager.remove_directory(
+            self.__temp_extracted + "/" + font_id
+        )
+
         font = self.__fonts.find_by_font_id(font_id).one()
         self.download_and_extract(font)
 
-        # install font files and update font files index
+        # remove old font files index
         self.__font_files.delete_by_font_id(font_id)
-        self.install(".otf", font_id)
+
+        if self.__system_info.platform in "Windows":
+            self.fix_windows_installations(".ttf", font_id)
+        else:
+            # install font files and update font files index
+            self.install(".ttf", font_id)
 
         # update installed fonts version information
         self.__installed_fonts.update_by_font_id(
@@ -129,9 +171,5 @@ class Operation:
 
         # update font upgradable index
         self.__fonts.update_by_font_id(font_id, {"upgradable": False})
-
-        # clean workspace directories
-        self.__file_manager.remove_directory(self.__temp_extracted)
-        self.__file_manager.remove_directory(self.__temp_dir + font.file_name)
 
         return self.return_on_success(font_id)

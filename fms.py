@@ -6,6 +6,7 @@ Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 3/12/2016
 """
 
 from flask import Flask
+from threading import Thread
 import sys
 
 from blueprint import about_blueprint, channel_blueprint, font_blueprint, \
@@ -22,11 +23,11 @@ def run_flask_app():
     fms.register_blueprint(operation_blueprint)
     fms.register_blueprint(preference_blueprint)
 
-    fms.run(debug=True, host="0.0.0.0", threaded=True)
+    fms.run(host="0.0.0.0", threaded=True)
 
 
 def run_threads():
-    ThreadRunner("cache_refresh").run()
+    ThreadRunner().run()
 
 
 def main(argv):
@@ -38,8 +39,8 @@ def main(argv):
             CacheManager().update_font_cache()
 
         if "start" in argv:
-            run_threads()
-            run_flask_app()
+            Thread(target=run_threads).start()
+            Thread(target=run_flask_app).start()
 
 
 if __name__ == '__main__':

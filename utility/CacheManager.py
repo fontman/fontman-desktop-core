@@ -27,6 +27,10 @@ class CacheManager:
         channels = self.__channel_service.find_all()
 
         for channel in channels:
+            # skip if channel is disabled
+            if not channel.is_enabled:
+                continue
+
             if "github" in channel.type:
                 self.update_github_based_channel(channel)
 

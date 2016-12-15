@@ -15,23 +15,29 @@ following packages.
 
 ```bash
 pip install flask
+pip install requests
 pip install sqlalchemy
 ```
 
+additionally for windows platforms,
+
+```bash
+pip install pypiwin32
+```
 
 #####Run for the first time
 
 To initialize the application data, if you are running it for the first time,
 
 ```bash
-python3 fms.py init
+python fms.py init
 ```
 
 
 #####Run fms
 
 ```bash
-python3 fms.py start
+python fms.py start
 ```
 
 Once the flask application started you can start using fontman-gui, 

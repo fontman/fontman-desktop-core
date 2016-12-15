@@ -11,7 +11,9 @@ from session import db_session
 
 class ChannelService:
 
-    def add_new(self, channel_id, base_url, type, license_key=None):
+    def add_new(
+            self, channel_id, base_url, type, license_key=None
+    ):
         new_channel = Channel(
             channel_id=channel_id,
             base_url=base_url,
