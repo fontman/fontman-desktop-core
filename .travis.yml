@@ -20,8 +20,8 @@ install: true
 deploy:
   provider: releases
   skip_cleanup: true
-  api_key: b02f9739adf601a764fa0457a270719b8bdb551d
-    secure:
+  api_key:
+    secure: b02f9739adf601a764fa0457a270719b8bdb551d
   file:
     - "dist/fms.dmg"
     - "dist/fms.zip"
