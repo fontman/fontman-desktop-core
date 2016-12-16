@@ -22,8 +22,6 @@ deploy:
   overwrite: true
   provider: releases
   skip_cleanup: true
-  api_key:
-    secure: f9eb6fb43f9c675502beafabf756365b5b80cb10
   file:
     - "dist/fms.dmg"
   on:
