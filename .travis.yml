@@ -16,7 +16,6 @@ before_install:
 - pyinstaller --onefile fms.py
 - ls
 - hdiutil create dist/fms.dmg -srcfolder dist/ -ov
-- zip -r dist/fms.zip dist/fms.app
 - ls dist/
 install: true
 deploy:
@@ -26,7 +25,6 @@ deploy:
     secure: b02f9739adf601a764fa0457a270719b8bdb551d
   file:
     - "dist/fms.dmg"
-    - "dist/fms.zip"
   on:
     tags: true
     all_branches: true
