@@ -3,6 +3,7 @@ python:
 - '3.5'
 before_install:
 - which python
+- brew unlink python
 - brew install python
 - brew link --overwrite python
 - brew install wget
