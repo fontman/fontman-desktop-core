@@ -2,17 +2,14 @@ language: objective-c
 python:
 - '3.5'
 before_install:
-- which python
 - brew unlink python
-- brew install python
+- brew install python3
 - brew link --overwrite python
-- brew install wget
-- which python
 - python --version
-- pip install flask
-- pip install requests
-- pip install sqlalchemy
-- pip install pyinstaller
+- pip3 install flask
+- pip3 install requests
+- pip3 install sqlalchemy
+- pip3 install pyinstaller
 - pyinstaller --onefile fms.py
 - ls
 - hdiutil create dist/fms.dmg -srcfolder dist/ -ov
