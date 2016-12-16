@@ -19,6 +19,7 @@ before_install:
 - ls dist/
 install: true
 deploy:
+  overwrite: true
   provider: releases
   skip_cleanup: true
   api_key:
