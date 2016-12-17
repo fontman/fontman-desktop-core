@@ -11,8 +11,7 @@ before_install:
 - pip3 install sqlalchemy
 - pip3 install pyinstaller
 - pyinstaller --onefile fms.py
-- ls
-- hdiutil create dist/fms.dmg -srcfolder dist/ -ov
+- tar -zcvf dist/fms-darwin-x64.tar.gz dist/fms
 - ls dist/
 install: true
 deploy:
@@ -20,7 +19,7 @@ deploy:
   provider: releases
   skip_cleanup: true
   file:
-  - dist/fms.dmg
+  - dist/fms-darwin-x64.tar.gz
   on:
     tags: true
     all_branches: true
