@@ -5,14 +5,14 @@ Functions to install, update and remove fonts.
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 2/12/2016
 """
 
-import datetime, os
+import datetime, os, platform
 
 from service import FontFileService, FontService, InstalledFontService, \
     SystemService
 from utility import FileManager
 
 # conditional imports for windows platform
-if SystemService().find_system_info().platform in "Windows":
+if platform.system() in "Windows":
     import win32api
     import win32con
     import ctypes

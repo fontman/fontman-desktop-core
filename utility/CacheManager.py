@@ -28,7 +28,7 @@ class CacheManager:
 
         for channel in channels:
             # skip if channel is disabled
-            if not channel.is_enabled:
+            if not channel.is_active:
                 continue
 
             if "github" in channel.type:

@@ -5,7 +5,7 @@ Run actions in threads
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 10/12/2016
 """
 
-import os, re, time
+import os, platform, re, time
 from threading import Thread
 
 from service import FontFileService, InstalledFontService, SystemService
@@ -13,7 +13,7 @@ from session import db_lock
 from utility import CacheManager
 
 # conditional imports for windows platform
-if SystemService().find_system_info().platform in "Windows":
+if platform.system() in "Windows":
     import win32api
     import win32con
     import ctypes
@@ -53,19 +53,22 @@ class ThreadRunner:
             cache.update_font_cache()
 
     def refresh_installed_fonts_windows_fix(self):
-        for font in InstalledFontService().find_all():
-            for font_file in FontFileService().find_all_by_font_id(
-                font.font_id
-            ):
-                file_path = os.path.join(
-                    self.__font_cache,
-                    font.font_id,
-                    font_file.file_name
-                )
+        try:
+            for font in InstalledFontService().find_all():
+                for font_file in FontFileService().find_all_by_font_id(
+                    font.font_id
+                ):
+                    file_path = os.path.join(
+                        self.__font_cache,
+                        font.font_id,
+                        font_file.file_name
+                    )
 
-                ctypes.windll.gdi32.AddFontResourceA(
-                    file_path
-                )
+                    ctypes.windll.gdi32.AddFontResourceA(
+                        file_path
+                    )
+        except:
+            print("Install some fonts... :-)")
 
         # inform windows new fonts have been added
         win32api.SendMessage(win32con.HWND_BROADCAST, win32con.WM_FONTCHANGE)
