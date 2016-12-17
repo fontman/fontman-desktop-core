@@ -1,10 +1,8 @@
 os:
-  - linux
   - osx
 python:
 - '3.5'
 before_install:
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
 - brew unlink python
 - brew install python3
 - brew link --overwrite python
@@ -14,16 +12,16 @@ before_install:
 - pip3 install sqlalchemy
 - pip3 install pyinstaller
 - pyinstaller --onefile fms.py
+- ls
+- hdiutil create dist/fms.dmg -srcfolder dist/ -ov
 - ls dist/
-- ; fi;
-
 install: true
 deploy:
   overwrite: true
   provider: releases
   skip_cleanup: true
   file:
-  - dist/fms
+  - dist/fms.dmg
   on:
     tags: true
     all_branches: true
