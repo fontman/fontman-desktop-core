@@ -1,6 +1,4 @@
-os:
-  - osx
-language: python
+language: objective-c
 python:
 - '3.5'
 before_install:
