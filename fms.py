@@ -49,6 +49,6 @@ def main(argv):
 
 if __name__ == '__main__':
     # main(sys.argv[1:])
-    # run_flask_app()
-    initialize()
-    CacheManager().refresh_cache()
+    run_flask_app()
+    # initialize()
+    # CacheManager().update_font_cache()
