@@ -6,7 +6,11 @@ Uses shutil high level python operations library and os python library.
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 26/11/2016
 """
 
-import os, os.path, requests, shutil, zipfile
+import os
+import shutil
+import zipfile
+
+import requests
 
 
 class FileManager:

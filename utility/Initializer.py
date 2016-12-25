@@ -9,7 +9,7 @@ import os, getpass, platform
 from os.path import expanduser
 from sqlalchemy import create_engine
 
-from service import ChannelService, SystemService
+from service import SystemService
 from session import Base, version
 from utility import FileManager
 
@@ -58,11 +58,4 @@ def initialize():
         "1h",
         getpass.getuser(),
         version
-    )
-
-    ChannelService().add_new(
-        "fontman_free",
-        "https://raw.githubusercontent.com/fontman/fms-directory/master/list"
-        ".json",
-        "github"
     )

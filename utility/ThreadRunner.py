@@ -5,15 +5,20 @@ Run actions in threads
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 10/12/2016
 """
 
-import os, re, time
+import os
+import platform
+import re
 from threading import Thread
 
-from service import FontFileService, InstalledFontService, SystemService
+import time
+
+from service import FontFileService
+from service import InstalledFontService
+from service import SystemService
 from session import db_lock
 from utility import CacheManager
 
-# conditional imports for windows platform
-if SystemService().find_system_info().platform in "Windows":
+if platform.system() in "Windows":
     import win32api
     import win32con
     import ctypes
@@ -50,7 +55,7 @@ class ThreadRunner:
                 time.sleep(1)
 
             # update cache
-            cache.update_font_cache()
+            cache.refresh_cache()
 
     def refresh_installed_fonts_windows_fix(self):
         for font in InstalledFontService().find_all():

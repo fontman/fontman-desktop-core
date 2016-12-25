@@ -5,9 +5,11 @@ Provides flask blueprint to manipulate fms settings.
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 8/12/2016
 """
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify
+from flask import request
 
-from service import LanguageService, SystemService
+from service import LanguageService
+from service import SystemService
 
 preference_blueprint = Blueprint('preference_blueprint', __name__)
 

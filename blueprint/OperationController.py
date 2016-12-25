@@ -6,7 +6,7 @@ repository cache.
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 28/11/2016
 """
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify
 
 from utility import Operation
 

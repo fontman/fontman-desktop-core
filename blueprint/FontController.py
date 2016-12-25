@@ -6,9 +6,13 @@ Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 28/11/2016
 """
 
 from flask import Blueprint, jsonify
+from flask import request
 
-from service import ChannelService, FontLanguageService, FontService, \
-    LanguageService, WebLinkService
+from consumer import FontmanConsumer
+from service import ChannelService
+from service import FontLanguageService
+from service import FontService
+from service import LanguageService
 
 font_blueprint = Blueprint('font_blueprint', __name__)
 
@@ -19,7 +23,6 @@ def get_json_list(font_list_object):
     font_id_list = []
     font_languages = FontLanguageService()
     font_list = []
-    web_links = WebLinkService()
 
     # collect enabled languages ids
     for language in LanguageService().find_all_enabled():
@@ -41,11 +44,6 @@ def get_json_list(font_list_object):
         if font_object.font_id not in font_id_list:
             continue
 
-        web_link = web_links.find_by_style(
-            font_object.font_id,
-            font_object.regular_style
-        ).one().web_link
-
         # set font status color
         status_color = "#57acf5"
 
@@ -55,19 +53,48 @@ def get_json_list(font_list_object):
         if font_object.upgradable:
             status_color = "#fdbc40"
 
-
         font_list.append({
             "font_id": font_object.font_id,
             "installed": font_object.installed,
             "name": font_object.name,
+            "preview_cdn": font_object.preview_cdn,
             "sample": font_object.sample,
             "status_color": status_color,
+            "type": font_object.type,
             "upgradable": font_object.upgradable,
             "version": font_object.version,
-            "web_link": web_link,
         })
 
     return font_list
+
+
+@font_blueprint.route('/font/add', methods=['POST'])
+def add_new_font():
+    font_data = request.json
+    new_font = {
+        font_data["font_id"],
+        font_data["channel_id"],
+        font_data["name"],
+        font_data["preview_cdn"],
+        font_data["sample"],
+        font_data["type"],
+        font_data["url"],
+        font_data["version"]
+    }
+
+    server_data = FontmanConsumer().consume_new_font(new_font)
+    FontService().add_new(
+        server_data["font_id"],
+        server_data["channel_id"],
+        server_data["name"],
+        server_data["preview_cdn"],
+        server_data["sample"],
+        server_data["type"],
+        server_data["url"],
+        server_data["version"]
+    )
+
+    return jsonify(True)
 
 
 @font_blueprint.route('/font/all', methods=['GET'])
@@ -95,25 +122,37 @@ def get_all_upgradable():
     return get_json_list(FontService().find_all_upgradable())
 
 
-@font_blueprint.route('/font/web_link/<font_id>')
-def get_web_links(font_id):
-    json_list = []
-
-    for link in WebLinkService().find_all_by_font_id(font_id):
-        json_list.append(
-            {
-                "font_id": link.font_id,
-                "file_name": link.file_name,
-                "style": link.style,
-                "web_link": link.web_link
-            }
-        )
-    return jsonify(json_list)
-
-
 @font_blueprint.route('/font/check/installed/<font_id>')
 def is_installed(font_id):
     return jsonify(FontService().find_by_font_id(font_id).one().installed)
+
+
+@font_blueprint.route('/font/upgrade', methods=['POST'])
+def update_font_by_id():
+    font_data = request.json
+    server_data = FontmanConsumer().consume_update_font(font_data)
+    font = FontService().find_by_font_id(server_data["font_id"])
+
+    if font.installed:
+        if font.version not in server_data["version"]:
+            FontService().update_by_font_id(
+                server_data["font_id"],
+                {
+                    "upgradable": True,
+                    "url": server_data["url"],
+                    "version": server_data["version"]
+                }
+            )
+    else:
+        FontService().update_by_font_id(
+            server_data["font_id"],
+            {
+                "url": server_data["url"],
+                "version": server_data["version"]
+            }
+        )
+
+    return jsonify(True)
 
 
 @font_blueprint.route('/font/check/upgradable/<font_id>')

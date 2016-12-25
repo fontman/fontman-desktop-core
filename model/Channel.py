@@ -15,7 +15,7 @@ class Channel(Base):
     __tablename__ = 'channel'
 
     channel_id = Column(String(50), primary_key=True)
-    base_url = Column(String(250), nullable=False)
+    name = Column(String(100), nullable=False)
     is_active = Column(Boolean, default=True)
-    license_key = Column(String(250), nullable=True)
-    type = Column(String(10), nullable=False)
+    key = Column(String(200), nullable=True)
+    type = Column(String(20), nullable=False)

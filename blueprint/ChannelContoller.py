@@ -5,10 +5,10 @@ Flask services to manipulate channels
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 9/12/2016
 """
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify
+from flask import request
 
 from service import ChannelService
-from utility import CacheManager
 
 channel_blueprint = Blueprint('channel_blueprint', __name__)
 
@@ -65,16 +65,6 @@ def refresh_by_channel_id(channel_id):
 @channel_blueprint.route("/channel/remove/<channel_id>")
 def delete_by_channel_id(channel_id):
     ChannelService().delete_by_channel_id(channel_id)
-
-    return jsonify(True)
-
-
-@channel_blueprint.route("/channel/refresh/<channel_id>")
-def refresh_channel_cache_data(channel_id):
-    channel = ChannelService().find_by_channel_id(channel_id).one()
-
-    if channel.type in "github":
-        CacheManager().update_github_based_channel(channel)
 
     return jsonify(True)
 

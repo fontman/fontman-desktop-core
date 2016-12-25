@@ -10,6 +10,10 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
+
+# fontman server
+server = "http://127.0.0.1:8080"
+
 # fontman version
 version = '0.1.0-SNAPSHOT'
 
@@ -17,7 +21,7 @@ version = '0.1.0-SNAPSHOT'
 engine = create_engine(
     'sqlite:///./data/fontman.db',
     connect_args={'check_same_thread': False},
-    poolclass=StaticPool, echo =True,
+    poolclass=StaticPool, echo=True,
 )
 Base = declarative_base()
 

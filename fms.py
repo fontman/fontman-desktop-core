@@ -9,10 +9,15 @@ from flask import Flask
 from threading import Thread
 import sys
 
-from blueprint import about_blueprint, channel_blueprint, font_blueprint, \
-    operation_blueprint, preference_blueprint
-
-from utility import CacheManager, initialize, ThreadRunner
+from blueprint import about_blueprint
+from blueprint import channel_blueprint
+from blueprint import font_blueprint
+from blueprint import operation_blueprint
+from blueprint import preference_blueprint
+from blueprint import profile_blueprint
+from utility import CacheManager
+from utility import ThreadRunner
+from utility import initialize
 
 
 def run_flask_app():
@@ -22,6 +27,7 @@ def run_flask_app():
     fms.register_blueprint(font_blueprint)
     fms.register_blueprint(operation_blueprint)
     fms.register_blueprint(preference_blueprint)
+    fms.register_blueprint(profile_blueprint)
 
     fms.run(host="0.0.0.0", threaded=True)
 
@@ -32,11 +38,9 @@ def run_threads():
 
 def main(argv):
     for arg in argv:
-        print(arg)
-
         if "init" in arg:
             initialize()
-            CacheManager().update_font_cache()
+            CacheManager().refresh_cache()
 
         if "start" in argv:
             Thread(target=run_threads).start()
@@ -45,6 +49,6 @@ def main(argv):
 
 if __name__ == '__main__':
     # main(sys.argv[1:])
-    run_flask_app()
-    # initialize()
-    # CacheManager().update_font_cache()
+    # run_flask_app()
+    initialize()
+    CacheManager().refresh_cache()

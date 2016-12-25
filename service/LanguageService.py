@@ -11,8 +11,8 @@ from session import db_session
 
 class LanguageService:
 
-    def add_new(self, is_enabled, value):
-        new_language = Language(is_enabled=is_enabled, value=value)
+    def add_new(self, id, is_enabled, value):
+        new_language = Language(id=id, is_enabled=is_enabled, value=value)
 
         db_session.add(new_language)
         db_session.commit()
@@ -29,6 +29,13 @@ class LanguageService:
     def find_by_value(self, value):
         print(value)
         return db_session.query(Language).filter_by(value=value)
+
+    def is_exists_by_id(self, id):
+        try:
+            if self.find_by_id(id).one() is not None:
+                return True
+        except:
+            return False
 
     def update_by_id(self, id, update_list):
         self.find_by_id(id).update(update_list)

@@ -11,14 +11,12 @@ from session import db_session
 
 class ChannelService:
 
-    def add_new(
-            self, channel_id, base_url, type, license_key=None
-    ):
+    def add_new(self, channel_id, name, type, key=None):
         new_channel = Channel(
             channel_id=channel_id,
-            base_url=base_url,
+            name=name,
             is_active=True,
-            license_key=license_key,
+            key=key,
             type=type
         )
 
@@ -45,6 +43,13 @@ class ChannelService:
 
     def find_by_channel_type(self, type):
         return db_session.query(Channel).filter_by(type=type).all()
+
+    def is_exists_by_id(self, channel_id):
+        try:
+            if self.find_by_channel_id(channel_id).one() is not None:
+                return True
+        except:
+            return False
 
     def update_by_channel_id(self, channel_id, update_list):
         self.find_by_channel_id(channel_id).update(update_list)

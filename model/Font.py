@@ -5,7 +5,7 @@ Basic font information.
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 2/12/2016
 """
 
-from sqlalchemy import Boolean, Column, ForeignKey, String
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 
 from session import Base
 
@@ -16,14 +16,13 @@ class Font(Base):
 
     font_id = Column(String(50), primary_key=True)
     channel_id = Column(
-        String(10), ForeignKey("channel.channel_id"), nullable=False
+        Integer, ForeignKey("channel.channel_id"), nullable=False
     )
-    file_name = Column(String(250), nullable=False)
     installed = Column(Boolean, default=False)
-    name = Column(String(150), nullable=False)
-    regular_style = Column(String(50), nullable=False)
+    name = Column(String(200), nullable=False)
+    preview_cdn = Column(String(250), nullable=False)
     sample = Column(String(250), nullable=False)
-    type = Column(String(10), nullable=False)
-    url = Column(String(250), nullable=True)
+    type = Column(String(20), nullable=False)
+    url = Column(String(250), nullable=False)
     upgradable = Column(Boolean, default=False)
-    version = Column(String(30), nullable=False)
+    version = Column(String(50), nullable=False)

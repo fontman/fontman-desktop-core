@@ -5,142 +5,99 @@ manipulation like operations.
 
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 2/12/2016
 """
-
-import requests
-
-from consumer import GitHubConsumer
-from service import ChannelService, FontLanguageService, FontService, \
-    GitHubFontService, GitLabFontService, LanguageService, WebLinkService
+from consumer import FontmanConsumer
+from service import ChannelService
+from service import FontLanguageService
+from service import FontService
+from service import FontStyleService
+from service import LanguageService
 
 
 class CacheManager:
 
     def __init__(self):
-        self.__channel_service = ChannelService()
+        self.__channels = ChannelService()
+        self.__consumer = FontmanConsumer()
+        self.__fonts = FontService()
         self.__font_languages = FontLanguageService()
-        self.__font_service = FontService()
-        self.__github_fonts = GitHubFontService()
-        self.__gitlab_fonts = GitLabFontService()
+        self.__font_styles = FontStyleService()
         self.__languages = LanguageService()
 
-    def update_font_cache(self):
-        channels = self.__channel_service.find_all()
+    def refresh_cache(self):
+        channels = self.__consumer.get_all_channels()
+        fonts = self.__consumer.get_all_fonts()
+        font_languages = self.__consumer.get_all_font_languages()
+        font_styles = self.__consumer.get_all_font_styles()
+        languages = self.__consumer.get_all_languages()
 
+        # update channels list
         for channel in channels:
-            # skip if channel is disabled
-            if not channel.is_enabled:
+            if self.__channels.is_exists_by_id(channel["channel_id"]):
                 continue
 
-            if "github" in channel.type:
-                self.update_github_based_channel(channel)
+            else:
+                self.__channels.add_new(
+                    channel["channel_id"], channel["name"], channel["type"]
+                )
 
-    def update_github_based_channel(self, channel):
-        # get fonts list from channel
-        fonts_list = requests.get(channel.base_url).json()
+        # upgrade fonts list
+        for font in fonts:
+            if self.__fonts.is_exists_by_font_id(font["font_id"]):
+                _font = self.__fonts.find_by_font_id(font["font_id"])
 
-        # update fonts information
-        for font in fonts_list:
-            if "github" in font["type"]:
-                self.update_github_font(channel.channel_id, font)
-            elif "gitlab" in font["type"]:
-                self.update_gitlab_font()
-
-    def update_github_font(self, channel_id, font):
-        # get font data using github API
-        latest_release = GitHubConsumer(
-            font["style_branch"], font["repository"], font["user"]
-        ).get_latest_release_info()
-        release_info = None
-
-        for asset in latest_release["assets"]:
-            if asset["content_type"] in "application/zip":
-                release_info = asset
-                break
-
-        # update font data if font already exists
-        font_obj = self.__font_service.find_by_font_id(font["id"])
-
-        if font_obj.count() is not 0:
-            font_obj = font_obj.one()
-
-            # check for version updates
-            if font_obj.installed:
-                if font_obj.version not in latest_release["tag_name"]:
-                    self.__font_service.update_by_font_id(
-                        font["id"],
+                if _font.version not in font["version"]:
+                    self.__fonts.update_by_font_id(
+                        font["font_id"],
                         {
-                            "file_name": release_info["name"],
-                            "upgradable": True,
-                            "url": release_info["browser_download_url"],
-                            "version": latest_release["tag_name"]
+                            "version": font["version"]
                         }
                     )
-                return
 
-        # add a record in fonts directory
-        self.__font_service.add_new(
-            font["id"],
-            channel_id,
-            release_info["name"],
-            font["name"],
-            font["style_regular"],
-            font["sample"],
-            font["type"],
-            release_info["browser_download_url"],
-            latest_release["tag_name"]
-        )
+                    if _font.instlled:
+                        self.__fonts.update_by_font_id(
+                            font["font_id"],
+                            {
+                                "upgradable": True
+                            }
+                        )
 
-        # update languages data
-        for value in font["languages"]:
-            self.update_language_data(font["id"], value)
+                continue
 
-        # add a detailed infromation record in github fonts table
-        self.__github_fonts.add_new(
-            font["id"],
-            font["repository"],
-            font["style_branch"],
-            font["style_path"],
-            font["user"]
-        )
-
-        # generate cdn links using provided branch(probably gh-pages)
-        consumer = GitHubConsumer(
-            font["style_branch"],
-            font["repository"],
-            font["user"]
-        )
-
-        web_links = WebLinkService()
-
-        for style in font["styles"]:
-            web_links.add_new(
-                style["file_name"],
-                font["id"],
-                style["style"],
-                style["type"],
-                consumer.get_cdn_link(
-                    font["style_path"] + "/" + style["file_name"]
+            else:
+                self.__fonts.add_new(
+                    font["font_id"],
+                    font["channel_id"],
+                    font["name"],
+                    font["preview_cdn"],
+                    font["sample"],
+                    font["type"],
+                    font["url"],
+                    font["version"]
                 )
-            )
 
-    def update_gitlab_font(self):
-        print("Support disabled until we launch Fontman server.")
+        for style in font_styles:
+            if self.__font_styles.is_exists_by_style_id(style["id"]):
+                continue
 
-    def update_language_data(self, font_id, value):
-        language = self.__languages.find_by_value(value)
+            else:
+                self.__font_styles.add_new(
+                    style["id"], style["cdn"], style["font_id"], style["style"]
+                )
 
-        # add language if it's not in the database
-        if language.count() is 0:
-            self.__languages.add_new(True, value)
+        for language in languages:
+            if self.__languages.is_exists_by_id(language["id"]):
+                continue
+            else:
+                self.__languages.add_new(
+                    language["id"], True, language["value"]
+                )
 
-            # add font languages details
-            self.__font_languages.add_new(
-                font_id,
-                self.__languages.find_by_value(value).one().id
-            )
-
-        else:
-            self.__font_languages.add_new(
-                font_id,
-                self.__languages.find_by_value(value).one().id
-            )
+        for font_language in font_languages:
+            if self.__font_languages.is_exists_by_id(font_language["id"]):
+                continue
+            else:
+                self.__font_languages.add_new(
+                    font_language["id"],
+                    font_language["font_id"],
+                    font_language["language_id"]
+                )

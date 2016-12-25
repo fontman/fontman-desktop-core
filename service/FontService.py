@@ -12,16 +12,15 @@ from session import db_session
 class FontService:
 
     def add_new(
-            self, font_id, channel_id, file_name, name, regular_style, sample,
+            self, font_id, channel_id, name, preview_cdn, sample,
             type, url, version
     ):
         new_font = Font(
             font_id=font_id,
             channel_id = channel_id,
-            file_name=file_name,
             installed=False,
             name=name,
-            regular_style=regular_style,
+            preview_cdn=preview_cdn,
             sample=sample,
             type=type,
             url=url,
@@ -44,11 +43,18 @@ class FontService:
     def find_all_upgradable(self):
         return db_session.query(Font).filter_by(upgradable=True)
 
+    def find_by_channel_id(self, channel_id):
+        return db_session.query(Font).filter_by(channel_id=channel_id)
+
     def find_by_font_id(self, font_id):
         return db_session.query(Font).filter_by(font_id=font_id)
 
-    def find_by_channel_id(self, channel_id):
-        return db_session.query(Font).filter_by(channel_id=channel_id)
+    def is_exists_by_font_id(self, font_id):
+        try:
+            if self.find_by_font_id(font_id).one() is not None:
+                return True
+        except:
+            return False
 
     def update_by_font_id(self, font_id, update_list):
         self.find_by_font_id(font_id).update(update_list)
