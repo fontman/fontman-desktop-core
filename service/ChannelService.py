@@ -14,9 +14,9 @@ class ChannelService:
     def add_new(self, channel_id, name, type, key=None):
         new_channel = Channel(
             channel_id=channel_id,
-            name=name,
             is_active=True,
             key=key,
+            name=name,
             type=type
         )
 

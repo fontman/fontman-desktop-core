@@ -10,6 +10,7 @@ from threading import Thread
 import sys
 
 from blueprint import about_blueprint
+from blueprint import auth_blueprint
 from blueprint import channel_blueprint
 from blueprint import font_blueprint
 from blueprint import operation_blueprint
@@ -23,6 +24,7 @@ from utility import initialize
 def run_flask_app():
     fms = Flask(__name__)
     fms.register_blueprint(about_blueprint)
+    fms.register_blueprint(auth_blueprint)
     fms.register_blueprint(channel_blueprint)
     fms.register_blueprint(font_blueprint)
     fms.register_blueprint(operation_blueprint)
@@ -51,4 +53,4 @@ if __name__ == '__main__':
     # main(sys.argv[1:])
     run_flask_app()
     # initialize()
-    # CacheManager().update_font_cache()
+    # CacheManager().refresh_cache()
