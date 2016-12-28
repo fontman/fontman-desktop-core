@@ -20,32 +20,18 @@ def add_user():
         {
             "email": profile_data["email"],
             "name": profile_data["name"],
-            "secret": profile_data["secret"]
+            "password": profile_data["password"],
+            "username": profile_data["username"]
         }
     )
 
     ProfileService().add_new(
         validated_data["user_id"],
         validated_data["email"],
-        True,
         validated_data["name"],
-        validated_data["key"]
+        validated_data["password"],
+        validated_data["username"],
+        validated_data["uuid"]
     )
 
     return jsonify(True)
-
-
-@profile_blueprint.route('/profile/status')
-def status_check():
-    user = ProfileService().find_user()
-
-    if user is None:
-        return jsonify(False)
-    else:
-        return jsonify(
-            {
-                "email": user.email,
-                "name": user.name,
-                "key": user.key
-            }
-        )

@@ -11,13 +11,15 @@ from session import db_session
 
 class ProfileService:
 
-    def add_new(self, user_id, email, is_active, name, key):
+    def add_new(self, user_id, email, name, password, username, uuid):
         new_profile = Profile(
             user_id=user_id,
             email=email,
-            is_active=is_active,
+            is_active=True,
             name=name,
-            key=key
+            password=password,
+            username=username,
+            uuid=uuid
         )
 
         db_session.add(new_profile)

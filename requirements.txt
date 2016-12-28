@@ -1,0 +1,5 @@
+flask==0.11.1
+fontconfig==0.1
+requests==2.12.3
+sqlalchemy==1.1.4
+

@@ -21,7 +21,7 @@ class FontmanConsumer:
         return json.loads(response.text)
 
     def consume_new_user(self, json_data):
-        response = requests.post(server + '/user/add', json=json_data)
+        response = requests.post(server + '/auth/add/user', json=json_data)
         return json.loads(response.text)
 
     def consume_update_font(self, json_data):
@@ -48,6 +48,6 @@ class FontmanConsumer:
         response = requests.get(server + '/language/all')
         return  json.loads(response.text)
 
-    def validate_user(self, json_data):
-        response = requests.post(server + '/user/validate', json=json_data)
+    def login(self, json_data):
+        response = requests.post(server + '/auth/login', json=json_data)
         return json.loads(response.text)
