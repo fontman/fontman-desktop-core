@@ -14,15 +14,12 @@ class Font(Base):
 
     __tablename__ = "font"
 
-    font_id = Column(String(50), primary_key=True)
+    font_id = Column(Integer, primary_key=True)
     channel_id = Column(
         Integer, ForeignKey("channel.channel_id"), nullable=False
     )
     installed = Column(Boolean, default=False)
     name = Column(String(200), nullable=False)
-    preview_cdn = Column(String(250), nullable=False)
-    sample = Column(String(250), nullable=False)
     type = Column(String(20), nullable=False)
-    url = Column(String(250), nullable=False)
     upgradable = Column(Boolean, default=False)
-    version = Column(String(50), nullable=False)
+

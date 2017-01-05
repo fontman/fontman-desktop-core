@@ -35,6 +35,8 @@ class SystemService:
         db_session.add(new_system)
         db_session.commit()
 
+        return new_system
+
     def find_system_info(self):
         return db_session.query(System).first()
 

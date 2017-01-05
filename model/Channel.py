@@ -17,5 +17,4 @@ class Channel(Base):
     channel_id = Column(String(50), primary_key=True)
     is_active = Column(Boolean, default=True)
     name = Column(String(100), nullable=False)
-    key = Column(String(200), nullable=True)
     type = Column(String(20), nullable=False)

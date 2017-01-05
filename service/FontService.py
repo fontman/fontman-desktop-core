@@ -12,24 +12,21 @@ from session import db_session
 class FontService:
 
     def add_new(
-            self, font_id, channel_id, name, preview_cdn, sample,
-            type, url, version
+            self, font_id, channel_id, name, type
     ):
         new_font = Font(
             font_id=font_id,
             channel_id = channel_id,
             installed=False,
             name=name,
-            preview_cdn=preview_cdn,
-            sample=sample,
             type=type,
-            url=url,
             upgradable=False,
-            version=version
         )
 
         db_session.add(new_font)
         db_session.commit()
+
+        return new_font
 
     def find_all(self):
         return db_session.query(Font).all()

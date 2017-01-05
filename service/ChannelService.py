@@ -15,13 +15,14 @@ class ChannelService:
         new_channel = Channel(
             channel_id=channel_id,
             is_active=True,
-            key=key,
             name=name,
             type=type
         )
 
         db_session.add(new_channel)
         db_session.commit()
+
+        return new_channel
 
     def delete_by_channel_id(self, channel_id):
         self.find_by_channel_id(channel_id).delete()

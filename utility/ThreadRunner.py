@@ -16,7 +16,6 @@ from service import FontFileService
 from service import InstalledFontService
 from service import SystemService
 from session import db_lock
-from utility import CacheManager
 
 if platform.system() in "Windows":
     import win32api
@@ -46,7 +45,6 @@ class ThreadRunner:
             ).group()
         )
 
-        cache = CacheManager()
 
         while True:
             time.sleep(refresh_rate * 60 * 60)
@@ -54,8 +52,6 @@ class ThreadRunner:
             while db_lock:
                 time.sleep(1)
 
-            # update cache
-            cache.refresh_cache()
 
     def refresh_installed_fonts_windows_fix(self):
         for font in InstalledFontService().find_all():

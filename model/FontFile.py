@@ -14,7 +14,6 @@ class FontFile(Base):
 
     __tablename__ = "font_file"
 
-    id = Column(Integer, primary_key=True)
+    font_file_id = Column(Integer, primary_key=True)
     file_name = Column(String(250), nullable=False)
     font_id = Column(String(50), ForeignKey("font.font_id"), nullable=False)
-    type = Column(String(10), nullable=False)

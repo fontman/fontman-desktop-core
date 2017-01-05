@@ -22,6 +22,8 @@ class InstalledFontService:
         db_session.add(new_installed_font)
         db_session.commit()
 
+        return new_installed_font
+
     def delete_by_font_id(self, font_id):
         self.find_by_font_id(font_id).delete()
         db_session.commit()

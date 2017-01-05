@@ -11,19 +11,21 @@ from session import db_session
 
 class ProfileService:
 
-    def add_new(self, user_id, email, name, password, username, uuid):
+    def add_new(self, user_id, email, name, password, token, username):
         new_profile = Profile(
             user_id=user_id,
             email=email,
-            is_active=True,
+            is_logged=True,
             name=name,
             password=password,
+            token=token,
             username=username,
-            uuid=uuid
         )
 
         db_session.add(new_profile)
         db_session.commit()
+
+        return new_profile
 
     def find_user(self):
         try:

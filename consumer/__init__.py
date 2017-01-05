@@ -1,12 +1,15 @@
 """ Consumer package
 
-Contains models and functions to consume font repository API and cache details.
-Goal is to update FMS cache data and generate repository cdn links for fonts to
-associate Electron UI.
+Consumer classes for Fontman server.
 
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 26/11/2016
 """
 
-from consumer.GitHubConsumer import GitHubConsumer
-from consumer.GitLabConsumer import GitLabConsumer
-from consumer.FontmanConsumer import FontmanConsumer
+from consumer.AuthConsumer import AuthConsumer
+from consumer.CollectionsConsumer import CollectionsConsumer
+from consumer.FontFacesConsumer import FontFacesConsumer
+from consumer.FontsConsumer import FontsConsumer
+from consumer.RatingsConsumer import RatingsConsumer
+from consumer.RolesConsumer import RolesConsumer
+from consumer.TeamsConsumer import TeamsConsumer
+from consumer.UsersConsumer import UsersConsumer

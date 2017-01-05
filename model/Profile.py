@@ -16,8 +16,8 @@ class Profile(Base):
 
     user_id = Column(Integer, primary_key=True)
     email = Column(String(255), nullable=False)
-    is_active = Column(Boolean,nullable=False)
+    is_logged = Column(Boolean,nullable=False)
     name = Column(String(200), nullable=False)
     password = Column(String(50), nullable=False)
+    token = Column(String(250), nullable=False)
     username = Column(String(200), nullable=False)
-    uuid = Column(String(250), nullable=False)

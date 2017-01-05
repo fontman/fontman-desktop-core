@@ -11,15 +11,17 @@ from session import db_session
 
 class FontFileService:
 
-    def add_new(self, file_name, font_id, type):
+    def add_new(self, font_file_id, file_name, font_id):
         new_font_file = FontFile(
+            font_file_id=font_file_id,
             file_name =file_name,
             font_id = font_id,
-            type=type
         )
 
         db_session.add(new_font_file)
         db_session.commit()
+
+        return new_font_file
 
     def delete_by_file_name(self, file_name, font_id):
         self.find_by_file_name(file_name, font_id).delete()
