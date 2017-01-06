@@ -11,7 +11,7 @@ from session import db_session
 
 class ProfileService:
 
-    def add_new(self, user_id, email, name, password, token, username):
+    def add_new(self, user_id, email, name, password, token):
         new_profile = Profile(
             user_id=user_id,
             email=email,
@@ -19,7 +19,6 @@ class ProfileService:
             name=name,
             password=password,
             token=token,
-            username=username,
         )
 
         db_session.add(new_profile)
