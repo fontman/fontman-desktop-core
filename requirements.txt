@@ -1,5 +1,5 @@
 flask==0.12
-python-fontconfig==0.1
+python-fontconfig==0.5.1
 requests==2.12.4
 sqlalchemy==1.1.4
 
