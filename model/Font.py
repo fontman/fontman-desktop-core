@@ -20,6 +20,5 @@ class Font(Base):
     )
     installed = Column(Boolean, default=False)
     name = Column(String(200), nullable=False)
-    team_id = Column(Integer, nullable=False)
     type = Column(String(20), nullable=False)
     upgradable = Column(Boolean, default=False)

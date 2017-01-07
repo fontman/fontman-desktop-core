@@ -12,6 +12,7 @@ from service.FontFaceService import FontFaceService
 from service.FontFileService import FontFileService
 from service.FontService import FontService
 from service.InstalledFontService import InstalledFontService
-from service.PermissionService import PermissionService
 from service.ProfileService import ProfileService
+from service.RoleService import RoleService
 from service.SystemService import SystemService
+from service.TeamService import TeamService

@@ -10,11 +10,11 @@ from sqlalchemy import Column, Integer, String
 from session import Base
 
 
-class Permission(Base):
+class Role(Base):
 
-    __tablename__ = 'permission'
+    __tablename__ = 'role'
 
-    permission_id = Column(Integer, primary_key=True)
-    entity = Column(String(20), nullable=False)
+    role_id = Column(Integer, primary_key=True)
     entity_id = Column(Integer, nullable=False)
+    entity = Column(String(20), nullable=False)
     role = Column(String(20), nullable=False)

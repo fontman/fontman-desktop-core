@@ -10,6 +10,7 @@ from flask import Blueprint, jsonify, request
 from consumer import FontsConsumer
 from service import FontFaceService
 from service import FontService
+from service import RoleService
 from service import ProfileService
 
 fonts_blueprint = Blueprint('fonts_blueprint', __name__)
@@ -27,7 +28,6 @@ def find_all_fonts():
                 "channel_id": font.channel_id,
                 "installed": font.installed,
                 "name": font.name,
-                "team_id": font.team_id,
                 "type": font.type,
                 "upgradable": font.upgradable
             }
@@ -45,7 +45,6 @@ def find_by_font_id(font_id):
             "channel_id": font.channel_id,
             "installed": font.installed,
             "name": font.name,
-            "team_id": font.team_id,
             "type": font.type,
             "upgradable": font.upgradable
         }
@@ -54,10 +53,13 @@ def find_by_font_id(font_id):
 
 @fonts_blueprint.route('/fonts/new', methods=['POST'])
 def add_new_font():
-    request_data = request.json
-    request_data["token"] = ProfileService().find_user().token
+    json_data = request.json
+    profile = ProfileService().find_user()
 
-    response = FontsConsumer().consume_new_font(request_data)
+    json_data["user_id"] = profile.user_id
+    json_data["token"] = profile.token
+
+    response = FontsConsumer().consume_new_font(json_data)
 
     if "error" in response:
         return jsonify(response)
@@ -67,7 +69,6 @@ def add_new_font():
             response["font_id"],
             response["channel_id"],
             response["name"],
-            response["team_id"],
             response["type"]
         )
 
@@ -78,5 +79,12 @@ def add_new_font():
                 fontface["fontface_id"],
                 fontface["resource_path"]
             )
+
+        RoleService().add_new(
+            response["role_id"],
+            response["font_id"],
+            "font",
+            "admin"
+        )
 
         return jsonify(True)
