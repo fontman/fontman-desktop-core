@@ -25,6 +25,7 @@ def login():
             "password": request_data["password"]
         }
         response = AuthConsumer().consume_login(json_data)
+        print(response)
 
         if "error" in response:
             return jsonify(response)
@@ -38,6 +39,23 @@ def login():
 
     else:
         return jsonify({"error": "Invalid email or password"})
+
+
+@auth_blueprint.route('/auth/logout')
+def logout():
+    ProfileService().set_active_mode(False)
+    return jsonify(True)
+
+
+@auth_blueprint.route('/auth/profile/name')
+def profile_info():
+    profile = ProfileService().find_user()
+
+    return jsonify(
+        {
+            "name": profile.name,
+        }
+    )
 
 
 @auth_blueprint.route('/auth/new/profile', methods=['POST'])
@@ -58,3 +76,17 @@ def add_new_profile():
         )
 
         return jsonify(True)
+
+
+@auth_blueprint.route('/auth/status')
+def find_status():
+    if ProfileService().find_user() is None:
+        return jsonify({"status": "undefined"})
+
+    else:
+        if ProfileService().find_user().is_logged:
+            return jsonify({"status": True})
+
+        else:
+            print("false.................")
+            return jsonify({"status": False})

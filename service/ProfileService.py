@@ -35,10 +35,10 @@ class ProfileService:
     def set_active_mode(self, active_mode):
         self.update_user(
             {
-                "is_active": active_mode
+                "is_logged": active_mode
             }
         )
 
     def update_user(self, update_list):
-        self.find_user().update(update_list)
+        db_session.query(Profile).update(update_list)
         db_session.commit()
