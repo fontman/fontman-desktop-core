@@ -15,6 +15,7 @@ following packages.
 
 ```bash
 pip3 install -r requirements.txt
+```
 
 #####Run for the first time
 

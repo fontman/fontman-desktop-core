@@ -88,5 +88,4 @@ def find_status():
             return jsonify({"status": True})
 
         else:
-            print("false.................")
             return jsonify({"status": False})

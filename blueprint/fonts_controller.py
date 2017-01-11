@@ -36,6 +36,26 @@ def find_all_fonts():
     return jsonify(response_data)
 
 
+@fonts_blueprint.route('/fonts/admin')
+def find_all_user_fonts():
+    response_data = []
+    font_privileges = RoleService().find_by_entity("font")
+
+    for privilege in font_privileges:
+        if privilege.role in "admin":
+            font = FontService().find_by_font_id(privilege.entity_id).first()
+
+            response_data.append(
+                {
+                    "font_id": font.font_id,
+                    "name": font.name,
+                    "type": font.type
+                }
+            )
+
+    return jsonify(response_data)
+
+
 @fonts_blueprint.route('/fonts/<font_id>')
 def find_by_font_id(font_id):
     font = FontService().find_by_font_id(font_id)

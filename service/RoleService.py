@@ -11,7 +11,7 @@ from session import db_session
 
 class RoleService:
     
-    def add_new(self, role_id, entity, entity_id, role):
+    def add_new(self, role_id, entity_id, entity, role):
         new_role = Role(
             role_id=role_id,
             entity_id=entity_id,
