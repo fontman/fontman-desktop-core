@@ -13,29 +13,29 @@ import json, requests
 class FontFacesConsumer:
     
     def consume_all_fontfaces(self):
-        response = requests.get(api_base_url + '/fontfaces')
+        response = requests.get(api_base_url + "/fontfaces")
         return json.loads(response.text)
 
     def consume_by_fontface_id(self, fontface_id):
-        response = requests.get(api_base_url + '/fontfaces/' + fontface_id)
+        response = requests.get(api_base_url + "/fontfaces/" + str(fontface_id))
         return json.loads(response.text)
 
     def consume_by_query(self, font_id):
         response = requests.get(
-            api_base_url + '/fontfaces/?font_id=' + font_id
+            api_base_url + "/fontfaces/?font_id=" + str(font_id)
         )
         return json.loads(response.text)
 
     def consume_delete_fontface(self, fontface_id, json_data):
         response = requests.post(
-            api_base_url + '/fontfaces/' + fontface_id + '/delete',
+            api_base_url + "/fontfaces/" + str(fontface_id) + "/delete",
             json=json_data
         )
         return json.loads(response.text)
 
     def consume_update_fontface(self, fontface_id, json_data):
         response = requests.post(
-            api_base_url + '/fontfaces/' + fontface_id + '/update',
+            api_base_url + "/fontfaces/" + str(fontface_id) + "/update",
             json=json_data
         )
         return json.loads(response.text)

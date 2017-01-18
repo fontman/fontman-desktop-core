@@ -13,9 +13,9 @@ import json, requests
 class UsersConsumer:
 
     def consume_all_users(self):
-        response = requests.get(api_base_url + '/users')
+        response = requests.get(api_base_url + "/users")
         return json.loads(response.text)
 
     def consume_by_user_id(self, user_id):
-        response = requests.get(api_base_url + '/users/' + user_id)
+        response = requests.get(api_base_url + "/users/" + user_id)
         return json.loads(response.text)

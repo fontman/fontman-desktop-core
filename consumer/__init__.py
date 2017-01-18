@@ -6,6 +6,7 @@ Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 26/11/2016
 """
 
 from consumer.AuthConsumer import AuthConsumer
+from consumer.ChannelsConsumer import ChannelsConsumer
 from consumer.CollectionsConsumer import CollectionsConsumer
 from consumer.FontFacesConsumer import FontFacesConsumer
 from consumer.FontsConsumer import FontsConsumer

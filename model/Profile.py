@@ -12,7 +12,7 @@ from session import Base
 
 class Profile(Base):
 
-    __tablename__ = 'profile'
+    __tablename__ = "profile"
 
     user_id = Column(Integer, primary_key=True)
     email = Column(String(255), nullable=False)

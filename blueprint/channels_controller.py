@@ -5,14 +5,14 @@ REST blueprint to provide channel API
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 9/1/2017
 """
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify
 
 from service import ChannelService
 
-channels_blueprint = Blueprint('channels_blueprint', __name__)
+channels_blueprint = Blueprint("channels_blueprint", __name__)
 
 
-@channels_blueprint.route('/channels')
+@channels_blueprint.route("/channels")
 def find_all_channels():
     response = []
 

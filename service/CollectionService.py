@@ -31,6 +31,9 @@ class CollectionService:
     def find_all(self):
         return db_session.query(Collection).all()
 
+    def find_all_collection_ids(self):
+        return db_session.query(Collection.collection_id)
+
     def find_by_collection_id(self, collection_id):
         return db_session.query(Collection).filter_by(
             collection_id=collection_id

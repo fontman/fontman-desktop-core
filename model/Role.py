@@ -12,7 +12,7 @@ from session import Base
 
 class Role(Base):
 
-    __tablename__ = 'role'
+    __tablename__ = "role"
 
     role_id = Column(Integer, primary_key=True)
     entity_id = Column(Integer, nullable=False)

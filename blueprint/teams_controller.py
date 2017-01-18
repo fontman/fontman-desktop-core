@@ -12,10 +12,10 @@ from service import ProfileService
 from service import RoleService
 from service import TeamService
 
-teams_blueprint = Blueprint('teams_blueprint', __name__)
+teams_blueprint = Blueprint("teams_blueprint", __name__)
 
 
-@teams_blueprint.route('/teams/new', methods=['POST'])
+@teams_blueprint.route("/teams/new", methods=["POST"])
 def add_new_team():
     json_data = request.data
     profile = ProfileService().find_user()
@@ -45,7 +45,7 @@ def add_new_team():
         return jsonify(True)
 
 
-@teams_blueprint.route('/teams/<team_id>')
+@teams_blueprint.route("/teams/<team_id>")
 def find_team_by_team_id(team_id):
     team = TeamService().find_by_team_id(team_id).one()
 
@@ -58,7 +58,7 @@ def find_team_by_team_id(team_id):
     )
 
 
-@teams_blueprint.route('/teams/<team_id>/update', methods=['POST'])
+@teams_blueprint.route("/teams/<team_id>/update", methods=["POST"])
 def update_team_data(team_id):
     json_data = request.data
     profile = ProfileService().find_user()

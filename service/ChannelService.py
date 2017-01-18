@@ -11,7 +11,7 @@ from session import db_session
 
 class ChannelService:
 
-    def add_new(self, channel_id, name, type, key=None):
+    def add_new(self, channel_id, name, type):
         new_channel = Channel(
             channel_id=channel_id,
             is_active=True,
@@ -27,6 +27,9 @@ class ChannelService:
     def delete_by_channel_id(self, channel_id):
         self.find_by_channel_id(channel_id).delete()
         db_session.commit()
+
+    def find_all_channel_ids(self):
+        return db_session.query(Channel.channel_id)
 
     def find_by_channel_id(self, channel_id):
         return db_session.query(Channel).filter_by(channel_id=channel_id)

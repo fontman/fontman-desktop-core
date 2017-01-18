@@ -9,7 +9,7 @@ import fontconfig
 import platform
 
 
-class FontTools:
+class FontManager:
 
     def get_system_font_list(self):
         if platform.system() in "Windows":
@@ -18,3 +18,4 @@ class FontTools:
 
     def find_by_font_family(self, font_family):
         return fontconfig.query(family=font_family)
+

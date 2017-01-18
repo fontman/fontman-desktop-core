@@ -15,10 +15,10 @@ class FontService:
         new_font = Font(
             font_id=font_id,
             channel_id = channel_id,
-            installed=False,
+            is_installed=False,
+            is_upgradable=False,
             name=name,
             type=type,
-            upgradable=False,
         )
 
         db_session.add(new_font)
@@ -29,14 +29,17 @@ class FontService:
     def find_all(self):
         return db_session.query(Font).all()
 
+    def find_all_font_ids(self):
+        return db_session.query(Font.font_id)
+
     def find_all_installable(self):
-        return db_session.query(Font).filter_by(installed=False)
+        return db_session.query(Font).filter_by(is_installed=False)
 
     def find_all_installed(self):
-        return db_session.query(Font).filter_by(installed=True)
+        return db_session.query(Font).filter_by(is_installed=True)
 
     def find_all_upgradable(self):
-        return db_session.query(Font).filter_by(upgradable=True)
+        return db_session.query(Font).filter_by(is_upgradable=True)
 
     def find_by_channel_id(self, channel_id):
         return db_session.query(Font).filter_by(channel_id=channel_id)

@@ -12,7 +12,7 @@ from session import Base
 
 class Channel(Base):
 
-    __tablename__ = 'channel'
+    __tablename__ = "channel"
 
     channel_id = Column(String(50), primary_key=True)
     is_active = Column(Boolean, default=True)

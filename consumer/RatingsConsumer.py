@@ -14,26 +14,26 @@ class RatingsConsumer:
 
     def consume_by_entity_id(self, entity, entity_id):
         response = requests.get(
-            api_base_url + '/ratings/' + entity + '/' + entity_id
+            api_base_url + "/ratings/" + entity + "/" + str(entity_id)
         )
         return json.loads(response.text)
 
     def consume_new_rating(self, json_data):
         response = requests.post(
-            api_base_url + '/ratings/new', json=json_data
+            api_base_url + "/ratings/new", json=json_data
         )
         return json.loads(response.text)
 
     def consume_delete_rating(self, rating_id, json_data):
         response = requests.post(
-            api_base_url + '/ratings/' + rating_id + '/delete',
+            api_base_url + "/ratings/" + str(rating_id) + "/delete",
             json=json_data
         )
         return json.loads(response.text)
 
     def consume_update_rating(self, rating_id, json_data):
         response = requests.post(
-            api_base_url + '/ratings/' + rating_id + '/update',
+            api_base_url + "/ratings/" + str(rating_id) + "/update",
             json=json_data
         )
         return json.loads(response.text)

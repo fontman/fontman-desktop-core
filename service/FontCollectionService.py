@@ -26,6 +26,9 @@ class FontCollectionService:
     def delete_by_font_collection_id(self, font_collection_id):
         self.find_by_font_collection_id(font_collection_id).delete()
 
+    def find_all_collection_ids(self):
+        return db_session.query(FontCollection.font_collection_id)
+
     def find_by_font_collection_id(self, font_collection_id):
         return db_session.query(FontCollection).filter_by(
             font_collection_id=font_collection_id

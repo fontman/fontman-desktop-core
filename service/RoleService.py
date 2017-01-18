@@ -39,6 +39,9 @@ class RoleService:
     def find_all(self):
         return db_session.query(Role).all()
 
+    def find_all_role_ids(self):
+        return db_session.query(Role.role_id)
+
     def find_by_entity(self, entity):
         return db_session.query(Role).filter_by(entity=entity)
 

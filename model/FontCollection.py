@@ -12,10 +12,10 @@ from session import Base
 
 class FontCollection(Base):
 
-    __tablename__ = 'font_collection'
+    __tablename__ = "font_collection"
 
     font_collection_id = Column(Integer, primary_key=True)
     collection_id = Column(
-        Integer, ForeignKey('collection.collection_id'), nullable=False
+        Integer, ForeignKey("collection.collection_id"), nullable=False
     )
-    font_id = Column(Integer, ForeignKey('font.font_id'), nullable=False)
+    font_id = Column(Integer, ForeignKey("font.font_id"), nullable=False)

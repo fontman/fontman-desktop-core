@@ -12,8 +12,8 @@ from session import Base
 
 class Team(Base):
 
-    __tablename__ = 'team'
+    __tablename__ = "team"
 
     team_id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False)
-    type = Column(String(20), default='public', nullable=False)
+    type = Column(String(20), default="public", nullable=False)

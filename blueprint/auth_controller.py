@@ -10,10 +10,10 @@ from flask import Blueprint, jsonify, request
 from consumer import AuthConsumer
 from service import ProfileService
 
-auth_blueprint = Blueprint('auth_blueprint', __name__)
+auth_blueprint = Blueprint("auth_blueprint", __name__)
 
 
-@auth_blueprint.route('/auth/login', methods=['POST'])
+@auth_blueprint.route("/auth/login", methods=["POST"])
 def login():
     request_data = request.json
     profile_data = ProfileService().find_user()
@@ -41,13 +41,13 @@ def login():
         return jsonify({"error": "Invalid email or password"})
 
 
-@auth_blueprint.route('/auth/logout')
+@auth_blueprint.route("/auth/logout")
 def logout():
     ProfileService().set_active_mode(False)
     return jsonify(True)
 
 
-@auth_blueprint.route('/auth/profile/name')
+@auth_blueprint.route("/auth/profile/name")
 def profile_info():
     profile = ProfileService().find_user()
 
@@ -58,7 +58,7 @@ def profile_info():
     )
 
 
-@auth_blueprint.route('/auth/new/profile', methods=['POST'])
+@auth_blueprint.route("/auth/new/profile", methods=["POST"])
 def add_new_profile():
     request_data = request.json
     response = AuthConsumer().consume_new_user(request_data)
@@ -78,7 +78,7 @@ def add_new_profile():
         return jsonify(True)
 
 
-@auth_blueprint.route('/auth/status')
+@auth_blueprint.route("/auth/status")
 def find_status():
     if ProfileService().find_user() is None:
         return jsonify({"status": "undefined"})

@@ -13,8 +13,8 @@ from session import Base
 
 class InstalledFont(Base):
 
-    __tablename__ = 'installed_font'
+    __tablename__ = "installed_font"
 
-    font_id = Column(String(50), ForeignKey('font.font_id'), primary_key=True)
+    font_id = Column(String(50), ForeignKey("font.font_id"), primary_key=True)
     date = Column(Date, onupdate=datetime.datetime.now())
     version = Column(String(30), nullable=False)

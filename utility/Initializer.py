@@ -11,12 +11,13 @@ from sqlalchemy import create_engine
 
 from service import SystemService
 from session import Base, version
+from utility import CacheManager
 from utility import FileManager
 
 
 def initialize():
     # create fontman data directories
-    FileManager().create_directory('./data')
+    FileManager().create_directory("./data")
 
     # create database
     engine = create_engine(
@@ -45,3 +46,6 @@ def initialize():
         getpass.getuser(),
         version
     )
+
+    CacheManager().update_channels_cache()
+    CacheManager().update_fonts_cache()
