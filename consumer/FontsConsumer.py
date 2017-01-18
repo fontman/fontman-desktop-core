@@ -34,9 +34,9 @@ class FontsConsumer:
         )
         return json.loads(response.text)
 
-    def consume_tags_url(self, font_id):
-        response = requests.post(
-            api_base_url + "/fonts/" + str(font_id) + "/tags_url"
+    def consume_metadata_by_font_id(self, font_id):
+        response = requests.get(
+            api_base_url + "/fonts/" + str(font_id) + "/metadata"
         )
         return json.loads(response.text)
     

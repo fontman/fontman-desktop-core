@@ -23,12 +23,31 @@ def find_all_fonts():
     fonts = FontService().find_all()
 
     for font in fonts:
+        fontfaces = FontFaceService().find_by_font_id(font.font_id)
+        fontfaces_list = []
+        regular_fontface = None
+
+        for fontface in fontfaces:
+            if "regular" in (fontface.fontface).lower():
+                regular_fontface = font.name + "-" + fontface.fontface
+
+            fontfaces_list.append(
+                {
+                    "fontface": fontface.fontface,
+                    "resource_path": fontface.resource_path
+                }
+            )
+
         response_data.append(
             {
                 "font_id": font.font_id,
                 "channel_id": font.channel_id,
+                "defaultText": "Fontman",
+                "defaultTextSize": 40,
+                "fontfaces": fontfaces_list,
                 "is_installed": font.is_installed,
                 "name": font.name,
+                "selectedFontface": regular_fontface,
                 "type": font.type,
                 "is_upgradable": font.is_upgradable
             }
@@ -106,7 +125,9 @@ def add_new_font():
             response["name"],
             response["type"]
         )
-        tags_info = FontsConsumer().consume_tags_url(response["font_id"])
+        tags_info = FontsConsumer().consume_metadata_by_font_id(
+            response["font_id"]
+        )
 
         MetadataService().add_new(
             tags_info["font_id"],
@@ -117,9 +138,9 @@ def add_new_font():
 
         for fontface in response["fontfaces"]:
             FontFaceService().add_new(
+                fontface["fontface_id"],
                 response["font_id"],
                 fontface["fontface"],
-                fontface["fontface_id"],
                 fontface["resource_path"]
             )
 
