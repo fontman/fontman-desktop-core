@@ -15,6 +15,7 @@ class FontService:
         new_font = Font(
             font_id=font_id,
             channel_id = channel_id,
+            is_chosen = False,
             is_installed=False,
             is_upgradable=False,
             name=name,
@@ -28,6 +29,9 @@ class FontService:
 
     def find_all(self):
         return db_session.query(Font).all()
+
+    def find_all_chosen(self):
+        return db_session.query(Font).filter_by(is_chosen=True)
 
     def find_all_font_ids(self):
         return db_session.query(Font.font_id)
@@ -53,6 +57,10 @@ class FontService:
                 return True
         except:
             return False
+
+    def update_all(self, update_list):
+        self.find_all().update(update_list)
+        db_session.commit()
 
     def update_by_font_id(self, font_id, update_list):
         self.find_by_font_id(font_id).update(update_list)

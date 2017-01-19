@@ -28,7 +28,7 @@ def find_all_fonts():
         regular_fontface = None
 
         for fontface in fontfaces:
-            if "regular" in (fontface.fontface).lower():
+            if "regular" in fontface.fontface.lower():
                 regular_fontface = font.name + "-" + fontface.fontface
 
             fontfaces_list.append(
@@ -42,6 +42,7 @@ def find_all_fonts():
             {
                 "font_id": font.font_id,
                 "channel_id": font.channel_id,
+                "chosen": font.is_chosen,
                 "defaultText": "Fontman",
                 "defaultTextSize": 40,
                 "fontfaces": fontfaces_list,
@@ -89,6 +90,52 @@ def find_by_font_id(font_id):
             "is_upgradable": font.is_upgradable
         }
     )
+
+
+@fonts_blueprint.route("/fonts/")
+def find_by_query():
+    response_data = []
+
+    try:
+        if request.args.get("is_chosen"):
+            chosen_fonts = FontService().find_all_chosen()
+
+            for font in chosen_fonts:
+                fontfaces = FontFaceService().find_by_font_id(font.font_id)
+                fontfaces_list = []
+                regular_fontface = None
+
+                for fontface in fontfaces:
+                    if "regular" in fontface.fontface.lower():
+                        regular_fontface = font.name + "-" + fontface.fontface
+
+                    fontfaces_list.append(
+                        {
+                            "fontface": fontface.fontface,
+                            "resource_path": fontface.resource_path
+                        }
+                    )
+
+                response_data.append(
+                    {
+                        "font_id": font.font_id,
+                        "channel_id": font.channel_id,
+                        "chosen": font.is_chosen,
+                        "defaultText": "Fontman",
+                        "defaultTextSize": 40,
+                        "fontfaces": fontfaces_list,
+                        "is_installed": font.is_installed,
+                        "name": font.name,
+                        "selectedFontface": regular_fontface,
+                        "type": font.type,
+                        "is_upgradable": font.is_upgradable
+                    }
+                )
+
+            return jsonify(response_data)
+
+    except:
+        return jsonify({"error": "Invalid request"})
 
 
 @fonts_blueprint.route("/fonts/<font_id>/metadata")
@@ -152,3 +199,19 @@ def add_new_font():
         )
 
         return jsonify(True)
+
+
+@fonts_blueprint.route("/fonts/update", methods=["POST"])
+def update_all_fonts():
+    json_data = request.json
+    FontService().update_all(json_data)
+
+    return jsonify(json_data)
+
+
+@fonts_blueprint.route("/fonts/<font_id>/update", methods=["POST"])
+def update_font_by_font_id(font_id):
+    json_data = request.json
+    FontService().update_by_font_id(font_id, json_data)
+
+    return jsonify(True)

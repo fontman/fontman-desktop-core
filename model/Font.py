@@ -18,6 +18,7 @@ class Font(Base):
     channel_id = Column(
         Integer, ForeignKey("channel.channel_id"), nullable=False
     )
+    is_chosen = Column(Boolean, default=False)
     is_installed = Column(Boolean, default=False)
     is_upgradable = Column(Boolean, default=False)
     name = Column(String(200), nullable=False)
