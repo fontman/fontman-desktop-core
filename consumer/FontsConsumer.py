@@ -34,6 +34,13 @@ class FontsConsumer:
         )
         return json.loads(response.text)
 
+    def consume_delete_font(self, font_id, json_data):
+        response = requests.post(
+            api_base_url + "/fonts/" + str(font_id) + "/delete",
+            json=json_data
+        )
+        return json.loads(response.text)
+
     def consume_metadata_by_font_id(self, font_id):
         response = requests.get(
             api_base_url + "/fonts/" + str(font_id) + "/metadata"
@@ -43,13 +50,18 @@ class FontsConsumer:
     def consume_new_font(self, json_data):
         response = requests.post(api_base_url + "/fonts/new", json=json_data)
         return json.loads(response.text)
-    
-    def consume_delete_font(self, font_id, json_data):
-        response = requests.post(
-            api_base_url + "/fonts/" + str(font_id) + "/delete",
-            json=json_data
-        )
-        return json.loads(response.text)
+
+    def consume_latest_rel_info(self, font_id):
+        response = json.loads(requests.get(
+            api_base_url + "/fonts/" + str(font_id) + "/latest"
+        ))
+        return json.loads(requests.get(response["rel_info_url"]))
+
+    def consume_rel_info(self, font_id, rel_id):
+        response = json.loads(requests.get(
+            api_base_url + "/fonts/" + str(font_id) + "/releases/" + str(rel_id)
+        ))
+        return json.loads(requests.get(response["rel_info_url"]))
     
     def consume_update_font(self, font_id, json_data):
         response = requests.post(

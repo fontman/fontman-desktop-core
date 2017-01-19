@@ -11,9 +11,8 @@ from session import db_session
 
 class FontFileService:
 
-    def add_new(self, font_file_id, file_name, font_id):
+    def add_new(self, file_name, font_id):
         new_font_file = FontFile(
-            font_file_id=font_file_id,
             file_name =file_name,
             font_id = font_id,
         )

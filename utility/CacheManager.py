@@ -12,6 +12,7 @@ from consumer import ChannelsConsumer
 from service import ChannelService
 from service import FontFaceService
 from service import FontService
+from service import InstalledFontService
 
 
 class CacheManager:
@@ -63,6 +64,25 @@ class CacheManager:
         )
         self.add_new_fontfaces(new_fontfaces)
 
+    def gather_font_updates(self):
+        font_ids = FontService().find_all_font_ids()
+
+        for font_id in font_ids:
+            font_data = FontService().find_by_font_id(font_id).first()
+
+            if font_data.is_installed:
+                latest_rel_data = FontsConsumer().consume_latest_rel_info(
+                    font_id
+                )
+                if latest_rel_data["tag_name"] not in InstalledFontService(
+                ).find_by_font_id(font_id).first()["version"]:
+                    FontService().update_by_font_id(
+                        font_id,
+                        {
+                            "is_upgradable": True
+                        }
+                    )
+
     def update_channels_cache(self):
         local_id_list = ChannelService().find_all_channel_ids()
         remote_id_list = ChannelsConsumer().consume_all_channels()
@@ -97,8 +117,6 @@ class CacheManager:
     def update_fonts_cache(self):
         local_id_list = FontService().find_all_font_ids()
         remote_id_list = FontsConsumer().consume_all_fonts()
-        print(local_id_list.first())
-        print(remote_id_list)
 
         if local_id_list.first() is None and remote_id_list is not []:
             for font_id in remote_id_list:

@@ -12,10 +12,9 @@ from session import db_session
 
 class InstalledFontService:
 
-    def add_new(self, font_id, date, version):
+    def add_new(self, font_id, version):
         new_installed_font = InstalledFont(
             font_id=font_id,
-            date=date,
             version=version
         )
 

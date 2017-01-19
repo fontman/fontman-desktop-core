@@ -42,16 +42,16 @@ class FileManager:
     def move_directory(self, source, destination):
         shutil.move(source, destination)
 
-    def move_file(self, file_name, source_dir, dest_dir):
+    def move_file(self, file_name, dest_dir, source_file):
         try:
             shutil.move(
-                source_dir + "/" + file_name,
+                source_file,
                 dest_dir + "/" + file_name
             )
 
         except:
             self.create_directory(dest_dir)
-            self.move_file(file_name, source_dir, dest_dir)
+            self.move_file(file_name, dest_dir, source_file)
 
     def remove_directory(self, directory_path):
         try:
