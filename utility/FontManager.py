@@ -43,6 +43,7 @@ class FontManager:
                             "file_path": os.path.join(root, file)
                         }
                     )
+                    print(os.path.join(root, file))
 
         return files_list
 
@@ -53,6 +54,9 @@ class FontManager:
         for font in sys_fonts_list:
             if requested_font.name in font:
                 return {"error": "Font has been already installed"}
+
+        if FontService().find_by_font_id(font_id).first().is_installed:
+            return {"error": "Font has been already installed"}
 
         release_data = FontsConsumer().consume_rel_info(
             font_id, rel_id
@@ -66,12 +70,12 @@ class FontManager:
 
                 FileManager().create_directory(artifacts_dir)
                 FileManager().download_file(
-                    font_dir + "/" + release_data["name"],
-                    release_data["browser_download_url"]
+                    font_dir + "/" + asset["name"],
+                    asset["browser_download_url"]
                 )
 
                 FileManager().extract_file(
-                    font_dir + "/" + release_data["name"],
+                    font_dir + "/" + asset["name"],
                     artifacts_dir
                 )
 
@@ -87,17 +91,28 @@ class FontManager:
                         artifacts_dir, ".ufo"
                     )
 
+                print(fontfaces)
+
                 for fontface in fontfaces:
                     FileManager().move_file(
                         fontface["name"], sys_font_dir, fontface["file_path"]
                     )
                     FontFileService().add_new(fontface["name"], font_id)
 
+
+                FontService().update_by_font_id(
+                    font_id,
+                    {
+                        "is_installed": True
+                    }
+                )
+
                 InstalledFontService().add_new(
                     font_id, release_data["tag_name"]
                 )
 
-                return {"success": "Font successfully installed"}
+                FileManager().remove_directory(font_dir)
+                return True
 
             else:
                 return {"error": "Please ask maintainer to do a Fontman "

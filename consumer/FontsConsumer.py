@@ -4,7 +4,7 @@ Consume and sync with fontman server fonts REST API.
 
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 5/1/2017
 """
-
+from service import MetadataService
 from session import api_base_url
 
 import json, requests
@@ -60,8 +60,14 @@ class FontsConsumer:
     def consume_rel_info(self, font_id, rel_id):
         response = json.loads(requests.get(
             api_base_url + "/fonts/" + str(font_id) + "/releases/" + str(rel_id)
-        ))
-        return json.loads(requests.get(response["rel_info_url"]))
+        ).text)
+        return json.loads(requests.get(response["rel_info_url"]).text)
+
+    def consume_releases(self, font_id):
+        response = json.loads(requests.get(
+            MetadataService().find_by_font_id(font_id).first().tags_url
+        ).text)
+        return response
     
     def consume_update_font(self, font_id, json_data):
         response = requests.post(
