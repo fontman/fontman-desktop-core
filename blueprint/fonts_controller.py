@@ -4,7 +4,7 @@ Provides fonts REST API for Fontman client GUI
 
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 6/1/2017
 """
-
+import time
 from flask import Blueprint, jsonify, request
 
 from consumer import FontsConsumer
@@ -95,7 +95,7 @@ def find_by_font_id(font_id):
 
 @fonts_blueprint.route("/fonts/<font_id>/releases")
 def find_tags_by_font_id(font_id):
-    response = []
+    response = [{"id": "devel", "tag_name": "devel"}]
     rel_info = FontsConsumer().consume_releases(font_id)
 
     for release in rel_info:
@@ -112,6 +112,17 @@ def find_tags_by_font_id(font_id):
 @fonts_blueprint.route("/fonts/<font_id>/install/<rel_id>")
 def install_font_by_font_id(font_id, rel_id):
     response = FontManager().install_font(font_id, rel_id)
+    return jsonify(response)
+
+
+@fonts_blueprint.route("/fonts/<font_id>/reinstall/<rel_id>")
+def reinstall_font_by_font_id(font_id, rel_id):
+    response = False
+
+    if FontManager().remove_font(font_id):
+        time.sleep(0.5)
+        response = FontManager().install_font(font_id, rel_id)
+
     return jsonify(response)
 
 
@@ -201,7 +212,8 @@ def add_new_font():
 
         MetadataService().add_new(
             tags_info["font_id"],
-            "https://api.github.com/repos/" + json_data["gitUser"] + "/"
+            "https://api.github.com/repos/"
+            + json_data["gitUser"] + "/"
             + json_data["gitRepository"] + "/releases/latest",
             tags_info["tags_url"]
         )
@@ -209,6 +221,7 @@ def add_new_font():
         for fontface in response["fontfaces"]:
             FontFaceService().add_new(
                 fontface["fontface_id"],
+                fontface["download_url"],
                 response["font_id"],
                 fontface["fontface"],
                 fontface["resource_path"]

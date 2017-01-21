@@ -10,11 +10,28 @@ import fontconfig
 import os
 
 from consumer import FontsConsumer
+from service import FontFaceService
 from service import FontFileService
 from service import FontService
 from service import InstalledFontService
 from service import SystemService
 from utility import FileManager
+
+
+def find_files_by_extension(source_dir, extension):
+    files_list = []
+
+    for root, dirs, files in walk(source_dir):
+        for file in files:
+            if file.endswith(extension):
+                files_list.append(
+                    {
+                        "name": file,
+                        "file_path": os.path.join(root, file)
+                    }
+                )
+
+    return files_list
 
 
 class FontManager:
@@ -31,32 +48,79 @@ class FontManager:
     def find_by_font_family(self, font_family):
         return fontconfig.query(family=font_family)
 
-    def find_files_by_extension(self, source_dir, extension):
-        files_list = []
-
-        for root, dirs, files in walk(source_dir):
-            for file in files:
-                if file.endswith(extension):
-                    files_list.append(
-                        {
-                            "name": file,
-                            "file_path": os.path.join(root, file)
-                        }
-                    )
-                    print(os.path.join(root, file))
-
-        return files_list
-
     def install_font(self, font_id, rel_id):
-        requested_font = FontService().find_by_font_id(font_id).first()
+        font_dir = "./data/" + font_id
+        sys_font_dir = self.__system.font_directory
         sys_fonts_list = self.get_system_font_list()
+        artifacts_dir = "./data/" + font_id + "/extracted"
+
+        FileManager().create_directory(artifacts_dir)
+
+        requested_font = FontService().find_by_font_id(font_id).first()
 
         for font in sys_fonts_list:
             if requested_font.name in font:
-                return {"error": "Font has been already installed"}
+                print("Warning! Font already exists")
 
         if FontService().find_by_font_id(font_id).first().is_installed:
-            return {"error": "Font has been already installed"}
+            print("Warning! Font already exists")
+
+        if rel_id in "devel":
+            try:
+                fontfaces = FontFaceService().find_by_font_id(font_id)
+
+                for fontface in fontfaces:
+                    fontfile_name = requested_font.name + "-"\
+                                    + fontface.fontface
+
+                    if fontface.download_url.endswith(".otf"):
+                        fontfile_name += ".otf"
+                    elif fontface.download_url.endswith(".ttf"):
+                        fontfile_name += ".ttf"
+
+                    FileManager().download_file(
+                        artifacts_dir + "/" + fontfile_name,
+                        fontface.download_url
+                    )
+
+                fontfiles = find_files_by_extension(font_dir, ".ttf")
+
+                if len(fontfiles) == 0:
+                    fontfiles = find_files_by_extension(
+                        font_dir, ".otf"
+                    )
+
+                if len(fontfiles) == 0:
+                    fontfiles = find_files_by_extension(
+                        font_dir, ".ufo"
+                    )
+
+                print(fontfiles)
+
+                for file in fontfiles:
+                    FileManager().move_file(
+                        file["name"], sys_font_dir, file["file_path"]
+                    )
+
+                    FontFileService().add_new(file["name"], font_id)
+
+                FontService().update_by_font_id(
+                    font_id,
+                    {
+                        "is_installed": True
+                    }
+                )
+
+                InstalledFontService().add_new(
+                    font_id, "devel"
+                )
+                FileManager().remove_directory(font_dir)
+
+                return True
+
+            except:
+                # raise
+                return {"error": "Error while installing devel version."}
 
         release_data = FontsConsumer().consume_rel_info(
             font_id, rel_id
@@ -64,11 +128,6 @@ class FontManager:
 
         for asset in release_data["assets"]:
             if "application/zip" in asset["content_type"]:
-                artifacts_dir = "./data/" + font_id + "/extracted"
-                font_dir = "./data/" + font_id
-                sys_font_dir = self.__system.font_directory
-
-                FileManager().create_directory(artifacts_dir)
                 FileManager().download_file(
                     font_dir + "/" + asset["name"],
                     asset["browser_download_url"]
@@ -79,26 +138,23 @@ class FontManager:
                     artifacts_dir
                 )
 
-                fontfaces = self.find_files_by_extension(artifacts_dir, ".ttf")
+                fontfaces = find_files_by_extension(artifacts_dir, ".ttf")
 
                 if fontfaces is []:
-                    fontfaces = self.find_files_by_extension(
+                    fontfaces = find_files_by_extension(
                         artifacts_dir, ".otf"
                     )
 
                 if fontfaces is []:
-                    fontfaces = self.find_files_by_extension(
+                    fontfaces = find_files_by_extension(
                         artifacts_dir, ".ufo"
                     )
-
-                print(fontfaces)
 
                 for fontface in fontfaces:
                     FileManager().move_file(
                         fontface["name"], sys_font_dir, fontface["file_path"]
                     )
                     FontFileService().add_new(fontface["name"], font_id)
-
 
                 FontService().update_by_font_id(
                     font_id,
@@ -117,3 +173,27 @@ class FontManager:
             else:
                 return {"error": "Please ask maintainer to do a Fontman "
                                  "specific packaging"}
+
+    def remove_font(self, font_id):
+        font_files = FontFileService().find_all_by_font_id(font_id)
+        sys_font_dir = SystemService().find_system_info().font_directory
+
+        try:
+            for file in font_files:
+                FileManager().remove_file(sys_font_dir + "/" + file.file_name)
+
+            FontFileService().delete_by_font_id(font_id)
+            InstalledFontService().delete_by_font_id(font_id)
+
+            FontService().update_by_font_id(
+                font_id,
+                {
+                    "is_installed": False,
+                    "is_upgradable": False
+                }
+            )
+
+            return True
+
+        except:
+            return {"error": "Error while removing font"}

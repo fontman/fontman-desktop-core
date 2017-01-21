@@ -47,6 +47,7 @@ class CacheManager:
         for fontface in new_fontfaces:
             FontFaceService().add_new(
                 fontface["fontface_id"],
+                fontface["download_url"],
                 fontface["font_id"],
                 fontface["fontface"],
                 fontface["resource_path"]
