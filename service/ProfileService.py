@@ -27,10 +27,7 @@ class ProfileService:
         return new_profile
 
     def find_user(self):
-        try:
-            return db_session.query(Profile).first()
-        except:
-            return None
+        return db_session.query(Profile).first()
 
     def set_active_mode(self, active_mode):
         self.update_user(

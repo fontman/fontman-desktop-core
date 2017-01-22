@@ -10,6 +10,7 @@ import sys
 from flask import Flask
 
 from blueprint import auth_blueprint
+from blueprint import collections_blueprint
 from blueprint import channels_blueprint
 from blueprint import fontfaces_blueprint
 from blueprint import fonts_blueprint
@@ -21,6 +22,7 @@ def run_flask_app():
     fms = Flask(__name__)
 
     fms.register_blueprint(auth_blueprint)
+    fms.register_blueprint(collections_blueprint)
     fms.register_blueprint(channels_blueprint)
     fms.register_blueprint(fontfaces_blueprint)
     fms.register_blueprint(fonts_blueprint)
