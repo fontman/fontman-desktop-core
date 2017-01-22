@@ -13,6 +13,7 @@ from service import ChannelService
 from service import FontFaceService
 from service import FontService
 from service import InstalledFontService
+from service import MetadataService
 
 
 class CacheManager:
@@ -56,6 +57,7 @@ class CacheManager:
     def add_new_font(self, font_id):
         new_font = FontsConsumer().consume_by_font_id(font_id)
         new_fontfaces = FontFacesConsumer().consume_by_query(font_id)
+        new_metadata = FontsConsumer().consume_metadata_by_font_id(font_id)
 
         FontService().add_new(
             new_font["font_id"],
@@ -64,6 +66,15 @@ class CacheManager:
             new_font["type"]
         )
         self.add_new_fontfaces(new_fontfaces)
+        self.add_new_metadata(new_metadata)
+
+    def add_new_metadata(self, metadata):
+
+        MetadataService().add_new(
+            metadata["font_id"],
+            metadata["latest_tag_url"],
+            metadata["tags_url"]
+        )
 
     def gather_font_updates(self):
         font_ids = FontService().find_all_font_ids()
@@ -147,3 +158,4 @@ class CacheManager:
                     self.add_new_fontfaces(
                         FontFacesConsumer().consume_by_query(font_id)
                     )
+
