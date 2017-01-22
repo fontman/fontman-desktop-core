@@ -16,5 +16,4 @@ class Collection(Base):
 
     collection_id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False)
-    team_id = Column(Integer, nullable=False)
-    type = Column(String(20), default="public", nullable=False)
+    type = Column(String(20), default="Private", nullable=False)

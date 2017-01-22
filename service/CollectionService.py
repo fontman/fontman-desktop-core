@@ -11,11 +11,9 @@ from session import db_session
 
 class CollectionService:
 
-    def add_new(self, collection_id, team_id, name, type):
+    def add_new(self, name, type):
         new_collection = Collection(
-            collection_id=collection_id,
             name=name,
-            team_id=team_id,
             type=type
         )
 

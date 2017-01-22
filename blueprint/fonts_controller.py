@@ -4,6 +4,7 @@ Provides fonts REST API for Fontman client GUI
 
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 6/1/2017
 """
+
 import time
 from flask import Blueprint, jsonify, request
 

@@ -11,9 +11,8 @@ from session import db_session
 
 class FontCollectionService:
 
-    def add_new(self, font_collection_id, collection_id, font_id):
+    def add_new(self, collection_id, font_id):
         new_font_collection = FontCollection(
-            font_collection_id=font_collection_id,
             collection_id=collection_id,
             font_id=font_id
         )

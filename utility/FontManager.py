@@ -1,12 +1,11 @@
 """ Font management tools
 
-Access system fonts library and manipulate.
+Access system font library and manipulate.
 
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 28/12/2016
 """
 
 from os import walk
-import fontconfig
 import os
 
 from consumer import FontsConsumer
@@ -43,10 +42,8 @@ class FontManager:
         if self.__system.platform in "Windows":
             return os.listdir(os.path.join(os.environ["WINDIR"], "Fonts"))
         else:
+            import fontconfig
             return fontconfig.query()
-
-    def find_by_font_family(self, font_family):
-        return fontconfig.query(family=font_family)
 
     def install_font(self, font_id, rel_id):
         font_dir = "./data/" + font_id
@@ -95,12 +92,14 @@ class FontManager:
                         font_dir, ".ufo"
                     )
 
-                print(fontfiles)
-
                 for file in fontfiles:
-                    FileManager().move_file(
-                        file["name"], sys_font_dir, file["file_path"]
-                    )
+                    if "Windows" in self.__system.platform:
+                        print("platform: Windows")
+
+                    else:
+                        FileManager().move_file(
+                            file["name"], sys_font_dir, file["file_path"]
+                        )
 
                     FontFileService().add_new(file["name"], font_id)
 
@@ -151,9 +150,16 @@ class FontManager:
                     )
 
                 for fontface in fontfaces:
-                    FileManager().move_file(
-                        fontface["name"], sys_font_dir, fontface["file_path"]
-                    )
+                    if "Windows" in self.__system.platform:
+                        print("Platform: Windows")
+
+                    else :
+                        FileManager().move_file(
+                            fontface["name"],
+                            sys_font_dir,
+                            fontface["file_path"]
+                        )
+
                     FontFileService().add_new(fontface["name"], font_id)
 
                 FontService().update_by_font_id(

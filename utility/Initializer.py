@@ -31,10 +31,13 @@ def initialize():
     sys_font_dir = ""
 
     if "Windows" in system:
-        sys_font_dir = "C:\Windows\Fonts"
+        sys_font_dir = "C:\\Windows\\Fonts"
+
     elif "Linux" in system:
         sys_font_dir = user_home_dir + "/.fonts"
+
     else:
+        system = "mac"
         sys_font_dir = user_home_dir + "/Library/Fonts"
 
     SystemService().add_new(
