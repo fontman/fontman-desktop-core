@@ -35,7 +35,6 @@ def find_all_fontfaces():
 @fontfaces_blueprint.route("/fontfaces/specimen/get")
 def get_font_specimen_font():
     global selected_fontface_url
-    print(selected_fontface_url)
     return jsonify(selected_fontface_url)
 
 
@@ -94,7 +93,7 @@ def find_fontface_by_font_id():
 
 @fontfaces_blueprint.route("/fontfaces/<fontface_id>/delete")
 def delete_fontface_by_fontface_id(fontface_id):
-    profile = ProfileService().find_user()
+    profile = ProfileService().find_logged_user()
 
     json_data = {
         "user_id": profile.user_id,

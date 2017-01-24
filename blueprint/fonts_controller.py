@@ -204,7 +204,7 @@ def find_metadata_by_font_id(font_id):
 @fonts_blueprint.route("/fonts/new", methods=["POST"])
 def add_new_font():
     json_data = request.json
-    profile = ProfileService().find_user()
+    profile = ProfileService().find_logged_user()
 
     json_data["user_id"] = profile.user_id
     json_data["token"] = profile.token

@@ -18,7 +18,7 @@ teams_blueprint = Blueprint("teams_blueprint", __name__)
 @teams_blueprint.route("/teams/new", methods=["POST"])
 def add_new_team():
     json_data = request.data
-    profile = ProfileService().find_user()
+    profile = ProfileService().find_logged_user()
 
     json_data["user_id"] = profile.user_id
     json_data["token"] = profile.token
@@ -61,7 +61,7 @@ def find_team_by_team_id(team_id):
 @teams_blueprint.route("/teams/<team_id>/update", methods=["POST"])
 def update_team_data(team_id):
     json_data = request.data
-    profile = ProfileService().find_user()
+    profile = ProfileService().find_logged_user()
 
     json_data["user_id"] = profile.user_id
     json_data["token"] = profile.token

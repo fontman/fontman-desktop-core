@@ -26,16 +26,26 @@ class ProfileService:
 
         return new_profile
 
-    def find_user(self):
-        return db_session.query(Profile).first()
+    def find_all(self):
+        return db_session.query(Profile)
 
-    def set_active_mode(self, active_mode):
-        self.update_user(
+    def find_by_email(self, email):
+        return db_session.query(Profile).filter_by(email=email).first()
+
+    def find_by_user_id(self, user_id):
+        return db_session.query(Profile).filter_by(user_id=user_id)
+
+    def find_logged_user(self):
+        return db_session.query(Profile).filter_by(is_logged=True).first()
+
+    def set_active_mode(self, user_id, active_mode):
+        self.update_by_user_id(
+            user_id,
             {
                 "is_logged": active_mode
             }
         )
 
-    def update_user(self, update_list):
-        db_session.query(Profile).update(update_list)
+    def update_by_user_id(self, user_id, update_list):
+        self.find_by_user_id(user_id).update(update_list)
         db_session.commit()

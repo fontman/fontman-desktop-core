@@ -8,6 +8,7 @@ Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 6/1/2017
 from flask import Blueprint, jsonify, request
 
 from consumer import AuthConsumer
+from consumer import UsersConsumer
 from service import ProfileService
 
 auth_blueprint = Blueprint("auth_blueprint", __name__)
@@ -16,43 +17,54 @@ auth_blueprint = Blueprint("auth_blueprint", __name__)
 @auth_blueprint.route("/auth/login", methods=["POST"])
 def login():
     request_data = request.json
-    profile_data = ProfileService().find_user()
+    profile_data = ProfileService().find_by_email(request_data["email"])
 
-    if request_data["email"] in profile_data.email and request_data["password"]\
-            in profile_data.password:
-        json_data = {
-            "email": request_data["email"],
-            "password": request_data["password"]
-        }
-        response = AuthConsumer().consume_login(json_data)
-        print(response)
+    json_data = {
+        "email": request_data["email"],
+        "password": request_data["password"]
+    }
 
-        if "error" in response:
-            return jsonify(response)
+    auth_response = AuthConsumer().consume_login(json_data)
 
-        if response in ProfileService().find_user().token:
-            ProfileService().set_active_mode(True)
-            return jsonify(True)
+    if "error" in auth_response:
+        return jsonify(auth_response)
 
-        else:
-            return jsonify({"error": "Token mismatch, contact admin"})
+    if profile_data is None:
+        user_data = UsersConsumer().consume_by_user_id(auth_response["user_id"])
+
+        ProfileService().add_new(
+            user_data["user_id"],
+            request_data["email"],
+            user_data["name"],
+            request_data["passsword"],
+            auth_response["token"]
+        )
 
     else:
-        return jsonify({"error": "Invalid email or password"})
+        ProfileService().update_by_user_id(
+            auth_response["user_id"],
+            {
+                "is_logged": True,
+                "token": auth_response["token"]
+            }
+        )
 
-
-@auth_blueprint.route("/auth/logout")
-def logout():
-    ProfileService().set_active_mode(False)
     return jsonify(True)
 
 
-@auth_blueprint.route("/auth/profile/name")
+@auth_blueprint.route("/auth/<user_id>/logout")
+def logout(user_id):
+    ProfileService().set_active_mode(user_id, False)
+    return jsonify(True)
+
+
+@auth_blueprint.route("/auth/profile")
 def profile_info():
-    profile = ProfileService().find_user()
+    profile = ProfileService().find_logged_user()
 
     return jsonify(
         {
+            "user_id": profile.user_id,
             "name": profile.name,
         }
     )
@@ -80,11 +92,11 @@ def add_new_profile():
 
 @auth_blueprint.route("/auth/status")
 def find_status():
-    if ProfileService().find_user() is None:
+    if ProfileService().find_all().first() is None:
         return jsonify({"status": "undefined"})
 
     else:
-        if ProfileService().find_user().is_logged:
+        if ProfileService().find_logged_user().is_logged:
             return jsonify({"status": True})
 
         else:
