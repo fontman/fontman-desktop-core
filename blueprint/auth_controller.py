@@ -96,8 +96,8 @@ def find_status():
         return jsonify({"status": "undefined"})
 
     else:
-        if ProfileService().find_logged_user().is_logged:
-            return jsonify({"status": True})
+        if ProfileService().find_logged_user() is None:
+            return jsonify({"status": False})
 
         else:
-            return jsonify({"status": False})
+            return jsonify({"status": True})
