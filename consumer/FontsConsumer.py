@@ -4,6 +4,7 @@ Consume and sync with fontman server fonts REST API.
 
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 5/1/2017
 """
+
 from service import MetadataService
 from session import api_base_url
 

@@ -1,12 +1,19 @@
 language: objective-c
 python:
-- '3.5'
+- '3.5.3'
 before_install:
-- brew unlink python
-- brew install python3
-- brew link --overwrite python
+- brew unlink pyenv
+- brew install fontconfig
+- brew install pyenv
+- export PYENV_ROOT=/usr/local/opt/pyenv
+- eval "$(pyenv init -)"
+- $SHELL -l
+- env PYTHON_CONFIGURE_OPTS="--enable-framework" pyenv install 3.5.3
+- pyenv local 3.5.3
+- pyenv rehash
 - python --version
 - pip3 install -r requirements.txt
+- pip3 install pyinstaller
 - pyinstaller --onefile fms.py
 - tar -zcvf dist/fms-darwin-x64.tar.gz dist/fms
 - ls dist/

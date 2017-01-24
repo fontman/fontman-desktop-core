@@ -12,6 +12,7 @@ from service import FontFaceService
 from service import ProfileService
 
 fontfaces_blueprint = Blueprint("fontfaces_blueprint", __name__)
+selected_fontface_url = {}
 
 
 @fontfaces_blueprint.route("/fontfaces")
@@ -29,6 +30,25 @@ def find_all_fontfaces():
         )
 
     return jsonify(response_data)
+
+
+@fontfaces_blueprint.route("/fontfaces/specimen/get")
+def get_font_specimen_font():
+    global selected_fontface_url
+    print(selected_fontface_url)
+    return jsonify(selected_fontface_url)
+
+
+@fontfaces_blueprint.route(
+    "/fontfaces/<font_id>/specimen/set", methods=["POST"])
+def set_font_specimen_font(font_id):
+    global selected_fontface_url
+
+    for fontface in FontFaceService().find_by_font_id(font_id):
+        if request.json["selectedFontface"] in fontface.fontface:
+            selected_fontface_url["resource"] = fontface.resource_path
+
+    return jsonify(True)
 
 
 @fontfaces_blueprint.route("/fontfaces/<fontface_id>")
