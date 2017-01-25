@@ -7,6 +7,10 @@ Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 28/12/2016
 
 from os import walk
 import os
+import platform
+
+if platform.system() in "Windows":
+    from utility.win_fix import fixed_install_font
 
 from consumer import FontsConsumer
 from service import FontFaceService
@@ -31,6 +35,7 @@ def find_files_by_extension(source_dir, extension):
                 )
 
     return files_list
+
 
 
 class FontManager:
@@ -58,9 +63,6 @@ class FontManager:
         for font in sys_fonts_list:
             if requested_font.name in font:
                 print("Warning! Font already exists")
-
-        if FontService().find_by_font_id(font_id).first().is_installed:
-            print("Warning! Font already exists")
 
         if rel_id in "devel":
             try:
@@ -94,7 +96,7 @@ class FontManager:
 
                 for file in fontfiles:
                     if "Windows" in self.__system.platform:
-                        print("platform: Windows")
+                        fixed_install_font(file["file_path"])
 
                     else:
                         FileManager().move_file(
@@ -151,7 +153,7 @@ class FontManager:
 
                 for fontface in fontfaces:
                     if "Windows" in self.__system.platform:
-                        print("Platform: Windows")
+                        fixed_install_font(fontface["file_path"])
 
                     else :
                         FileManager().move_file(
