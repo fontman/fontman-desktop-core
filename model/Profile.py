@@ -18,5 +18,5 @@ class Profile(Base):
     email = Column(String(255), nullable=False)
     is_logged = Column(Boolean,nullable=False)
     name = Column(String(200), nullable=False)
-    password = Column(String(50), nullable=False)
+    password = Column(String(250), nullable=False)
     token = Column(String(250), nullable=False)

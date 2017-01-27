@@ -21,6 +21,7 @@ class AuthConsumer:
             api_base_url + "/auth/new/user",
             json=json_data
         )
+        print(response.text)
         return json.loads(response.text)
 
     def consume_new_password(self, json_data):

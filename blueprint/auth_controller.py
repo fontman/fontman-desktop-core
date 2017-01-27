@@ -103,7 +103,7 @@ def add_new_profile():
             response["user_id"],
             response["email"],
             response["name"],
-            response["password"],
+            request_data["password"],
             response["token"],
         )
 
