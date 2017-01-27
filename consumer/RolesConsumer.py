@@ -14,8 +14,17 @@ class RolesConsumer:
 
     def consume_by_entity_id(self, entity, entity_id, user_id):
         response = requests.get(
-            api_base_url + "/roles/" + entity + "/" + entity_id + "?user_id="
-            + user_id
+            api_base_url + "/roles/"
+            + entity + "/"
+            + str(entity_id)
+            + "?user_id=" + str(user_id)
+        )
+        return json.loads(response.text)
+
+    def consume_by_user_id(self, user_id, json_data):
+        response = requests.post(
+            api_base_url + "/roles/" + str(user_id),
+            json=json_data
         )
         return json.loads(response.text)
 
@@ -27,14 +36,14 @@ class RolesConsumer:
 
     def consume_delete_role(self, role_id, json_data):
         response = requests.post(
-            api_base_url + "/roles/" + role_id + "/delete",
+            api_base_url + "/roles/" + str(role_id) + "/delete",
             json=json_data
         )
         return json.loads(response.text)
 
     def consume_update_role(self, role_id, json_data):
         response = requests.post(
-            api_base_url + "/roles/" + role_id + "/update",
+            api_base_url + "/roles/" + str(role_id) + "/update",
             json=json_data
         )
         return json.loads(response.text)

@@ -17,7 +17,7 @@ class TeamsConsumer:
         return json.loads(response.text)
 
     def consume_by_team_id(self, team_id):
-        response = requests.get(api_base_url + "/teams/" + team_id)
+        response = requests.get(api_base_url + "/teams/" + str(team_id))
         return json.loads(response.text)
 
     def consume_by_query(self, type):
@@ -34,14 +34,14 @@ class TeamsConsumer:
 
     def consume_delete_team(self, team_id, json_data):
         response = requests.post(
-            api_base_url + "/teams/" + team_id + "/delete",
+            api_base_url + "/teams/" + str(team_id) + "/delete",
             json=json_data
         )
         return json.loads(response.text)
 
     def consume_update_team(self, team_id, json_data):
         response = requests.post(
-            api_base_url + "/teams/" + team_id + "/update",
+            api_base_url + "/teams/" + str(team_id) + "/update",
             json=json_data
         )
         return json.loads(response.text)

@@ -17,5 +17,5 @@ class UsersConsumer:
         return json.loads(response.text)
 
     def consume_by_user_id(self, user_id):
-        response = requests.get(api_base_url + "/users/" + user_id)
+        response = requests.get(api_base_url + "/users/" + str(user_id))
         return json.loads(response.text)

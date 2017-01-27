@@ -8,8 +8,10 @@ Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 6/1/2017
 from flask import Blueprint, jsonify, request
 
 from consumer import AuthConsumer
+from consumer import RolesConsumer
 from consumer import UsersConsumer
 from service import ProfileService
+from service import RoleService
 
 auth_blueprint = Blueprint("auth_blueprint", __name__)
 
@@ -32,13 +34,31 @@ def login():
     if profile_data is None:
         user_data = UsersConsumer().consume_by_user_id(auth_response["user_id"])
 
-        ProfileService().add_new(
+        new_profile = ProfileService().add_new(
             user_data["user_id"],
             request_data["email"],
             user_data["name"],
-            request_data["passsword"],
+            request_data["password"],
             auth_response["token"]
         )
+
+        # sync other user settings from server
+        user_roles = RolesConsumer().consume_by_user_id(
+            new_profile.user_id,
+            {
+                "token": new_profile.token
+            }
+        )
+
+        for role in user_roles:
+            RoleService().add_new(
+                role["role_id"],
+                role["entity_id"],
+                role["entity"],
+                role["role"]
+            )
+
+        return jsonify(True)
 
     else:
         ProfileService().update_by_user_id(
@@ -49,7 +69,7 @@ def login():
             }
         )
 
-    return jsonify(True)
+        return jsonify(True)
 
 
 @auth_blueprint.route("/auth/<user_id>/logout")
