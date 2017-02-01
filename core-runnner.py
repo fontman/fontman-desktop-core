@@ -1,4 +1,4 @@
-""" fms
+""" fontman desktop core
 
 fontman client font management system main application script.
 

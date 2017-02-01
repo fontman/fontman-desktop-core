@@ -14,8 +14,8 @@ before_install:
 - python --version
 - pip3 install -r requirements.txt
 - pip3 install pyinstaller
-- pyinstaller --onefile fms.py
-- tar -zcvf dist/fms-darwin-x64.tar.gz dist/fms
+- pyinstaller --onefile core-runnner.py
+- tar -zcvf dist/core-runnner-darwin-x64.tar.gz dist/core-runnner
 - ls dist/
 install: true
 deploy:
@@ -23,10 +23,10 @@ deploy:
   provider: releases
   skip_cleanup: true
   file:
-  - dist/fms-darwin-x64.tar.gz
+  - dist/core-runnner-darwin-x64.tar.gz
   on:
     tags: true
     all_branches: true
-    repo: fontman/fms
+    repo: fontman/fontman-desktop-core
   api-key:
     secure: QWxXKQpmVICz2yNPHjbZroYgQfbJEXR2F+fktj+mnwwZxflDBkoka8b9f+q5MvFWJm/B5V6HOUpZyUK+cHBmDqlbBCO5fyXNB5PV/NE2gmeWyUzwRiozsMQ7tYaXYaks/ISWMOaNN5mzShtgylaID9+gJu2Zfs9op3TM1VZu7wpVDgDgPpk4LEGP/AFE2qaLwZay+Jty41FegrD2aYUyYawFi/LkbVsLkKDnKq8DkcUrkM0b14ZtY4LSzXAK5xDOBPEsslPHcrf6c6HvAQqKEbFflOl2tKiG6f2Mvt32h4/eR6kmOQizitthebX0r0Z+dg2P6LRJ6O4tQQBY8RP5ebjA2veJG0TitG/dP9KZzx6SeeiAC5d9yN1l0DbY47RXejCI+7U22BHIoUyn9v+5KF03qjZVkIbPeRs3fgotTc90UyNqVq11LcrNJNWmok0gmCwK785PDY/3sKLFEJwdCTnB/kaSCHgwTZXNUc3hlV1MaP88gm7QFoOLkbkaHJNqex8RBhXGe6skhPxmb9pyAHMUCUI+NzpA7IzK/MBAblX57IzPt6SeNXokfGqGhspc1TNrMga6BMPha2phLmZaRit0bhOInsz1Nty7VJ1wqC9ox3KuILcwa5wNl6ecxIf7oqe6QXevBvD4XQ+4NNy1si/Cp1H8kYwti5MSq/vlMuo=
