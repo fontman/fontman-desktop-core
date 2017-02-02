@@ -24,6 +24,10 @@ class FileManager:
         except:
             raise
 
+    def create_file(self, file_path, contents):
+        with open(file_path, "w+") as db_lock:
+            db_lock.write(contents)
+
     def extract_file(self, compressed_file, destination):
         if compressed_file.endswith(".zip"):
             with zipfile.ZipFile(compressed_file) as file:
