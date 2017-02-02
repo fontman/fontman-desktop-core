@@ -25,6 +25,9 @@ def find_all_fonts():
     fonts = FontService().find_all()
 
     for font in fonts:
+        if font.is_chosen:
+            continue
+
         fontfaces = FontFaceService().find_by_font_id(font.font_id)
         fontfaces_list = []
         regular_fontface = None

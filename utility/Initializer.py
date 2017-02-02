@@ -11,7 +11,6 @@ from sqlalchemy import create_engine
 
 from service import SystemService
 from session import Base, version
-from utility import CacheManager
 from utility import FileManager
 
 
@@ -45,10 +44,8 @@ def initialize():
         sys_font_dir,
         os.getcwd() + "/data",
         system,
-        "30m",
+        1,
         getpass.getuser(),
         version
     )
 
-    CacheManager().update_channels_cache()
-    CacheManager().update_fonts_cache()

@@ -12,3 +12,4 @@ from utility.CacheManager import CacheManager
 from utility.FileManager import FileManager
 from utility.FontManager import FontManager
 from utility.Initializer import initialize
+from utility.tasks_scheduler import run_tasks

@@ -31,5 +31,3 @@ DBSession = sessionmaker(bind=engine)
 
 db_session = DBSession()
 
-# db lock
-db_lock = False

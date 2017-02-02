@@ -24,7 +24,7 @@ class CacheManager:
         update_list = []
 
         for id in local_tb_ids:
-            if remote_tb_ids:
+            if id in remote_tb_ids:
                 update_list.append(id)
             else:
                 removal_list.append(id)
@@ -110,6 +110,7 @@ class CacheManager:
 
             if new_list is not []:
                 for channel_id in new_list:
+                    print(channel_id)
                     self.add_new_channel(channel_id)
 
             if update_list is not []:
