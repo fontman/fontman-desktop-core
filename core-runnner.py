@@ -6,7 +6,6 @@ Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 3/12/2016
 """
 
 import socket
-import sys
 import threading
 
 from flask import Flask
@@ -17,6 +16,7 @@ from blueprint import channels_blueprint
 from blueprint import fontfaces_blueprint
 from blueprint import fonts_blueprint
 from blueprint import teams_blueprint
+from blueprint import typecase_blueprint
 from utility import FileManager
 from utility import initialize
 from utility import run_tasks
@@ -31,6 +31,7 @@ def run_flask_app():
     fms.register_blueprint(fontfaces_blueprint)
     fms.register_blueprint(fonts_blueprint)
     fms.register_blueprint(teams_blueprint)
+    fms.register_blueprint(typecase_blueprint)
 
     fms.run(host="0.0.0.0", threaded=True)
 
@@ -41,7 +42,7 @@ def main():
 
     if con is not 0:
         if FileManager().is_file_exists("./data/fontman.db"):
-            threading.Thread(target=run_tasks).start()
+            # threading.Thread(target=run_tasks).start()
             run_flask_app()
 
         else:
