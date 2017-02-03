@@ -31,12 +31,10 @@ def find_all_fonts():
         fontfaces = FontFaceService().find_by_font_id(font.font_id)
         fontfaces_list = []
         regular_fontface = None
-        regular_font_url = None
 
         for fontface in fontfaces:
             if "regular" in fontface.fontface.lower():
                 regular_fontface = fontface.fontface
-                regular_font_url = fontface.resource_path
 
             fontfaces_list.append(
                 {
@@ -54,7 +52,6 @@ def find_all_fonts():
                 "fontfaces": fontfaces_list,
                 "is_installed": font.is_installed,
                 "name": font.name,
-                "regularFontUrl": regular_font_url,
                 "selectedFontface": regular_fontface,
                 "type": font.type,
                 "is_upgradable": font.is_upgradable
@@ -175,7 +172,6 @@ def find_by_query():
                         "fontfaces": fontfaces_list,
                         "is_installed": font.is_installed,
                         "name": font.name,
-                        "regularFontUrl": regular_font_url,
                         "selectedFontface": regular_fontface,
                         "type": font.type,
                         "is_upgradable": font.is_upgradable
