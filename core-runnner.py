@@ -15,6 +15,7 @@ from blueprint import collections_blueprint
 from blueprint import channels_blueprint
 from blueprint import fontfaces_blueprint
 from blueprint import fonts_blueprint
+from blueprint import settings_blueprint
 from blueprint import teams_blueprint
 from blueprint import typecase_blueprint
 from utility import FileManager
@@ -30,6 +31,7 @@ def run_flask_app():
     fms.register_blueprint(channels_blueprint)
     fms.register_blueprint(fontfaces_blueprint)
     fms.register_blueprint(fonts_blueprint)
+    fms.register_blueprint(settings_blueprint)
     fms.register_blueprint(teams_blueprint)
     fms.register_blueprint(typecase_blueprint)
 
