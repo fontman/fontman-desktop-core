@@ -42,24 +42,6 @@ def login():
             auth_response["token"]
         )
 
-        # sync other user settings from server
-        user_roles = RolesConsumer().consume_by_user_id(
-            new_profile.user_id,
-            {
-                "token": new_profile.token
-            }
-        )
-
-        for role in user_roles:
-            RoleService().add_new(
-                role["role_id"],
-                role["entity_id"],
-                role["entity"],
-                role["role"]
-            )
-
-        return jsonify(True)
-
     else:
         ProfileService().update_by_user_id(
             auth_response["user_id"],

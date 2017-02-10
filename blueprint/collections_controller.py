@@ -52,6 +52,8 @@ def find_fonts_by_collection_id(collection_id):
 def install_fonts_by_collection_id(collection_id):
     fonts = FontCollectionService().find_by_collection_id(collection_id)
 
+    return jsonify(True)
+
 
 @collections_blueprint.route("/collections/<collection_id>/fonts/<font_id>/add")
 def add_font_by_collection_id(collection_id, font_id):

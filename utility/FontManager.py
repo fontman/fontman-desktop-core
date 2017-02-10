@@ -6,7 +6,6 @@ Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 28/12/2016
 """
 
 from consumer import FontsConsumer
-from service import FontFaceService
 from service import FontFileService
 from service import FontService
 from service import InstalledFontService
@@ -117,69 +116,7 @@ class FontManager:
         font_dir = "./data/" + font_id
         sys_font_dir = self.__system.font_directory
         artifacts_dir = "./data/" + font_id + "/extracted"
-
         FileManager().create_directory(artifacts_dir)
-
-        requested_font = FontService().find_by_font_id(font_id).first()
-
-        if rel_id in "devel":
-            try:
-                fontfaces = FontFaceService().find_by_font_id(font_id)
-
-                for fontface in fontfaces:
-                    fontfile_name = requested_font.name + "-"\
-                                    + fontface.fontface
-
-                    if fontface.download_url.endswith(".otf"):
-                        fontfile_name += ".otf"
-                    elif fontface.download_url.endswith(".ttf"):
-                        fontfile_name += ".ttf"
-
-                    FileManager().download_file(
-                        artifacts_dir + "/" + fontfile_name,
-                        fontface.download_url
-                    )
-
-                fontfiles = find_files_by_extension(font_dir, ".ttf")
-
-                if len(fontfiles) == 0:
-                    fontfiles = find_files_by_extension(
-                        font_dir, ".otf"
-                    )
-
-                if len(fontfiles) == 0:
-                    fontfiles = find_files_by_extension(
-                        font_dir, ".ufo"
-                    )
-
-                for file in fontfiles:
-                    if "Windows" in self.__system.platform:
-                        fixed_install_font(file["file_path"])
-
-                    else:
-                        FileManager().move_file(
-                            file["name"], sys_font_dir, file["file_path"]
-                        )
-
-                    FontFileService().add_new(file["name"], font_id)
-
-                FontService().update_by_font_id(
-                    font_id,
-                    {
-                        "is_installed": True
-                    }
-                )
-
-                InstalledFontService().add_new(
-                    font_id, "devel"
-                )
-                FileManager().remove_directory(font_dir)
-
-                return True
-
-            except:
-                # raise
-                return {"error": "Error while installing devel version."}
 
         release_data = FontsConsumer().consume_rel_info(
             font_id, rel_id

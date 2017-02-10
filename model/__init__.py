@@ -11,6 +11,7 @@ from model.Font import Font
 from model.FontCollection import FontCollection
 from model.FontFace import FontFace
 from model.FontFile import FontFile
+from model.FontType import FontType
 from model.InstalledFont import InstalledFont
 from model.Metadata import Metadata
 from model.Profile import Profile

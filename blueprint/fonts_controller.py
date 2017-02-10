@@ -69,26 +69,6 @@ def find_chosen_fonts_status():
         return jsonify(True)
 
 
-@fonts_blueprint.route("/fonts/admin")
-def find_all_user_fonts():
-    response_data = []
-    font_privileges = RoleService().find_by_entity("font")
-
-    for privilege in font_privileges:
-        if privilege.role in "admin":
-            font = FontService().find_by_font_id(privilege.entity_id).first()
-
-            response_data.append(
-                {
-                    "font_id": font.font_id,
-                    "name": font.name,
-                    "type": font.type
-                }
-            )
-
-    return jsonify(response_data)
-
-
 @fonts_blueprint.route("/fonts/<font_id>")
 def find_by_font_id(font_id):
     font = FontService().find_by_font_id(font_id).first()
@@ -106,7 +86,7 @@ def find_by_font_id(font_id):
 
 @fonts_blueprint.route("/fonts/<font_id>/releases")
 def find_tags_by_font_id(font_id):
-    response = [{"id": "devel", "tag_name": "devel"}]
+    response = []
     rel_info = FontsConsumer().consume_releases(font_id)
 
     for release in rel_info:
@@ -196,58 +176,6 @@ def find_metadata_by_font_id(font_id):
             "tags_url": metadata.tags_url
         }
     )
-
-
-@fonts_blueprint.route("/fonts/new", methods=["POST"])
-def add_new_font():
-    json_data = request.json
-    profile = ProfileService().find_logged_user()
-
-    json_data["user_id"] = profile.user_id
-    json_data["token"] = profile.token
-
-    response = FontsConsumer().consume_new_font(json_data)
-
-    if "error" in response:
-        return jsonify(response)
-
-    else:
-        FontService().add_new(
-            response["font_id"],
-            response["channel_id"],
-            response["name"],
-            response["type"]
-        )
-        tags_info = FontsConsumer().consume_metadata_by_font_id(
-            response["font_id"]
-        )
-
-        MetadataService().add_new(
-            tags_info["font_id"],
-            "https://api.github.com/repos/"
-            + json_data["gitUser"] + "/"
-            + json_data["gitRepository"] + "/releases/latest",
-            tags_info["tags_url"]
-        )
-
-        for fontface in response["fontfaces"]:
-            FontFaceService().add_new(
-                fontface["fontface_id"],
-                fontface["download_url"],
-                response["font_id"],
-                fontface["fontface"],
-                fontface["resource_path"]
-            )
-
-        RoleService().add_new(
-            response["role_id"],
-            response["font_id"],
-            "font",
-            "admin"
-        )
-
-        return jsonify(True)
-
 
 @fonts_blueprint.route("/fonts/update", methods=["POST"])
 def update_all_fonts():

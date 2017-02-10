@@ -22,7 +22,7 @@ def initialize():
     engine = create_engine(
         "sqlite:///./data/fontman.db"
     )
-    Base.metadata.create_all(engine)
+    Base.metadata.create_all(engine, checkfirst=True)
 
     # gather and save system data
     user_home_dir = expanduser("~")

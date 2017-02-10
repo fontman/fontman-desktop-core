@@ -12,5 +12,6 @@ from consumer.FontFacesConsumer import FontFacesConsumer
 from consumer.FontsConsumer import FontsConsumer
 from consumer.RatingsConsumer import RatingsConsumer
 from consumer.RolesConsumer import RolesConsumer
+from consumer.TagsConsumer import TagsConsumer
 from consumer.TeamsConsumer import TeamsConsumer
 from consumer.UsersConsumer import UsersConsumer
