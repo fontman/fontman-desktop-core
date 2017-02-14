@@ -26,6 +26,10 @@ class ProfileService:
 
         return new_profile
 
+    def delete_all(self):
+        self.find_all().delete()
+        db_session.commit()
+
     def find_all(self):
         return db_session.query(Profile)
 

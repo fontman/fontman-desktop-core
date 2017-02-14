@@ -5,13 +5,13 @@ Initialize system directories, files and database.
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 2/12/2016
 """
 
-import os, getpass, platform
-from os.path import expanduser
-from sqlalchemy import create_engine
-
 from service import SystemService
 from session import Base, version
 from utility import FileManager
+
+import os, getpass, platform
+from os.path import expanduser
+from sqlalchemy import create_engine
 
 
 def initialize():

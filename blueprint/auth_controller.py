@@ -2,16 +2,13 @@
 
 Handling authentication and user management between FMS and Fontman GUI.
 
-Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 6/1/2017
+Created by Lahiru Pathirage @ Mooniak <lpsandaruwan@gmail.com> on 6/1/2017
 """
 
-from flask import Blueprint, jsonify, request
-
 from consumer import AuthConsumer
-from consumer import RolesConsumer
-from consumer import UsersConsumer
 from service import ProfileService
-from service import RoleService
+
+from flask import Blueprint, jsonify, request
 
 auth_blueprint = Blueprint("auth_blueprint", __name__)
 
@@ -31,27 +28,20 @@ def login():
     if "error" in auth_response:
         return jsonify(auth_response)
 
-    if profile_data is None:
-        user_data = UsersConsumer().consume_by_user_id(auth_response["user_id"])
+    if profile_data is not None:
+        ProfileService().delete_all()
 
-        new_profile = ProfileService().add_new(
-            user_data["user_id"],
-            request_data["email"],
-            user_data["name"],
-            request_data["password"],
-            auth_response["token"]
-        )
+    user_data = AuthConsumer().consume_user_info(auth_response["user_id"])
 
-    else:
-        ProfileService().update_by_user_id(
-            auth_response["user_id"],
-            {
-                "is_logged": True,
-                "token": auth_response["token"]
-            }
-        )
+    new_profile = ProfileService().add_new(
+        user_data["user_id"],
+        request_data["email"],
+        user_data["name"],
+        request_data["password"],
+        auth_response["token"]
+    )
 
-        return jsonify(True)
+    return jsonify(True)
 
 
 @auth_blueprint.route("/auth/<user_id>/logout")

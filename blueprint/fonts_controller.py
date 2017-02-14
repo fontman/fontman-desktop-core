@@ -5,16 +5,14 @@ Provides fonts REST API for Fontman client GUI
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 6/1/2017
 """
 
-import time
-from flask import Blueprint, jsonify, request
-
 from consumer import FontsConsumer
 from service import FontFaceService
 from service import FontService
 from service import MetadataService
-from service import RoleService
-from service import ProfileService
 from utility import FontManager
+
+import time
+from flask import Blueprint, jsonify, request
 
 fonts_blueprint = Blueprint("fonts_blueprint", __name__)
 
@@ -25,9 +23,6 @@ def find_all_fonts():
     fonts = FontService().find_all()
 
     for font in fonts:
-        if font.is_chosen:
-            continue
-
         fontfaces = FontFaceService().find_by_font_id(font.font_id)
         fontfaces_list = []
         regular_fontface = None
@@ -129,12 +124,10 @@ def find_by_query():
                 fontfaces = FontFaceService().find_by_font_id(font.font_id)
                 fontfaces_list = []
                 regular_fontface = None
-                regular_font_url = None
 
                 for fontface in fontfaces:
                     if "regular" in fontface.fontface.lower():
                         regular_fontface = fontface.fontface
-                        regular_font_url = fontface.resource_path
 
                     fontfaces_list.append(
                         {
@@ -176,6 +169,7 @@ def find_metadata_by_font_id(font_id):
             "tags_url": metadata.tags_url
         }
     )
+
 
 @fonts_blueprint.route("/fonts/update", methods=["POST"])
 def update_all_fonts():

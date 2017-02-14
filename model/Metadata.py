@@ -5,7 +5,7 @@ Font metadata.
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 16/1/2017
 """
 
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import Column, Integer, String
 
 from session import Base
 

@@ -5,10 +5,10 @@ Provides collections REST API for Fontman client GUI
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 22/1/2017
 """
 
-from flask import Blueprint, jsonify, request
-
 from service import CollectionService
 from service import FontCollectionService
+
+from flask import Blueprint, jsonify, request
 
 collections_blueprint = Blueprint("collections_blueprint", __name__)
 

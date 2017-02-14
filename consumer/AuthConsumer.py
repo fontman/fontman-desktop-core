@@ -44,3 +44,9 @@ class AuthConsumer:
             json=json_data
         )
         return json.loads(response.text)
+
+    def consume_user_info(self, user_id):
+        response = requests.get(
+            api_base_url + "/users/" + str(user_id)
+        )
+        return json.loads(response)

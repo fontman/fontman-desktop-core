@@ -5,10 +5,10 @@ Provides settings REST API for Fontman client GUI
 Created by Lahiru Pathirage @ Mooniak <lpsandaruwan@gmail.com> on 5/2/2017
 """
 
-from datetime import date
-from flask import Blueprint, jsonify, request
-
 from service import SystemService
+
+from datetime import date
+from flask import Blueprint, jsonify
 
 settings_blueprint = Blueprint("settings_blueprint", __name__)
 

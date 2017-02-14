@@ -5,7 +5,7 @@ Characteristics of a font. eg: serif/sans serif
 Created by Lahiru Pathirage @ Mooniak <lpsandaruwan@gmail.com> on 8/2/2017
 """
 
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String
 
 from session import Base
 

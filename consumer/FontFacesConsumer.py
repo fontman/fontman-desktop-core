@@ -25,17 +25,3 @@ class FontFacesConsumer:
             api_base_url + "/fontfaces/?font_id=" + str(font_id)
         )
         return json.loads(response.text)
-
-    def consume_delete_fontface(self, fontface_id, json_data):
-        response = requests.post(
-            api_base_url + "/fontfaces/" + str(fontface_id) + "/delete",
-            json=json_data
-        )
-        return json.loads(response.text)
-
-    def consume_update_fontface(self, fontface_id, json_data):
-        response = requests.post(
-            api_base_url + "/fontfaces/" + str(fontface_id) + "/update",
-            json=json_data
-        )
-        return json.loads(response.text)
