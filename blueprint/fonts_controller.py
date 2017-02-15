@@ -22,7 +22,7 @@ def find_all_fonts():
     fonts = FontService().find_all()
 
     for font in fonts:
-        metadata = MetadataService().find_by_font_id(font.font_id)
+        metadata = MetadataService().find_by_font_id(font.font_id).first()
         fontfaces = FontFaceService().find_by_font_id(font.font_id)
         languages = LanguageService().find_by_font_id(font.font_id)
 

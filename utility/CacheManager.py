@@ -8,9 +8,11 @@ Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 2/12/2016
 
 from consumer import FontFacesConsumer
 from consumer import FontsConsumer
+from consumer import TagsConsumer
 from service import FontFaceService
 from service import FontService
 from service import InstalledFontService
+from service import LanguageService
 from service import MetadataService
 
 
@@ -44,6 +46,18 @@ class CacheManager:
         )
 
         self.add_new_fontfaces(new_fontfaces)
+        self.add_tags(font_id)
+
+    def add_tags(self, font_id):
+        tags = TagsConsumer().consume_by_font_id(font_id)
+
+        for tag in tags:
+            if tag["key"] in "languages":
+                LanguageService().add_new(
+                    tag["tag_id"],
+                    tag["font_id"],
+                    tag["value"]
+                )
 
     def update_font_cache(self):
         update_list = FontsConsumer().consume_all_fonts()
@@ -55,7 +69,7 @@ class CacheManager:
                 MetadataService().update_by_font_id(
                     font_id,
                     {
-                        "download_url": font_data["download_data"],
+                        "download_url": font_data["download_url"],
                         "version": font_data["version"]
                     }
                 )
