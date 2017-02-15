@@ -40,7 +40,7 @@ def main():
 
     if con is not 0:
         if FileManager().is_file_exists("./data/fontman.db"):
-            # threading.Thread(target=run_tasks).start()
+            threading.Thread(target=run_tasks).start()
             run_flask_app()
 
         else:

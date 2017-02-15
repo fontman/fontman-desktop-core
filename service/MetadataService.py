@@ -11,11 +11,22 @@ from session import db_session
 
 class MetadataService:
 
-    def add_new(self, font_id, latest_tag_url, tags_url):
+    def add_new(
+            self,
+            metadata_id,
+            font_id,
+            default_fontface,
+            download_url,
+            license,
+            version
+    ):
         new_metadata = Metadata(
+            metadata_id=metadata_id,
             font_id=font_id,
-            latest_tag_url=latest_tag_url,
-            tags_url=tags_url
+            default_fontface=default_fontface,
+            download_url=download_url,
+            license=license,
+            version=version
         )
 
         db_session.add(new_metadata)
@@ -24,15 +35,17 @@ class MetadataService:
         return new_metadata
 
     def delete_by_metadata_id(self, metadata_id):
-        self.find_by_metadata_id(metadata_id).delete()
+        self.find_by_font_id(metadata_id).delete()
         db_session.commit()
 
-    def delete_by_font_id(self, font_id):
-        self.find_by_font_id(font_id)
-        db_session.commit()
+    def find_all(self):
+        return db_session.query(Metadata)
 
     def find_by_font_id(self, font_id):
-        return db_session.query(Metadata).filter_by(font_id=font_id)
+        return db_session.query(Metadata).filter_by(
+            font_id=font_id
+        )
 
-    def find_by_metadata_id(self, metadata_id):
-        return db_session.query(Metadata).filter_by(metadata_id=metadata_id)
+    def update_by_font_id(self, font_id, update_data):
+        self.find_by_font_id(font_id).update(update_data)
+        db_session.commit()

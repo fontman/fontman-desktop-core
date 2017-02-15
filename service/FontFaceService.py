@@ -12,11 +12,10 @@ from session import db_session
 class FontFaceService:
 
     def add_new(
-            self, fontface_id, download_url, font_id, fontface, resource_path
+            self, fontface_id, font_id, fontface, resource_path
     ):
         new_fontface = FontFace(
             fontface_id=fontface_id,
-            download_url=download_url,
             font_id=font_id,
             fontface=fontface,
             resource_path=resource_path

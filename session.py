@@ -12,8 +12,8 @@ from sqlalchemy.pool import StaticPool
 
 
 # fontman server
-api_base_url = "http://104.197.248.93:8080/api/v1alpha"
-# api_base_url = "http://127.0.0.1:8080/api/v1alpha"
+# api_base_url = "http://104.197.248.93:8080/api/v1alpha"
+api_base_url = "http://127.0.0.1:8080/api/v1alpha"
 
 # fontman version
 version = "0.1.0-SNAPSHOT"
@@ -30,4 +30,3 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 
 db_session = DBSession()
-

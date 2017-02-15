@@ -2,7 +2,7 @@
 
 Basic font information service.
 
-Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 2/12/2016
+Created by Lahiru Pathirage <lpsandaruwan@gmail.com> on 2/12/2016
 """
 
 from model import Font
@@ -11,15 +11,13 @@ from session import db_session
 
 class FontService:
 
-    def add_new(self, font_id, channel_id, name, type):
+    def add_new(self, font_id, name):
         new_font = Font(
             font_id=font_id,
-            channel_id = channel_id,
             is_chosen = False,
             is_installed=False,
             is_upgradable=False,
-            name=name,
-            type=type,
+            name=name
         )
 
         db_session.add(new_font)
@@ -52,16 +50,14 @@ class FontService:
         return db_session.query(Font).filter_by(font_id=font_id)
 
     def is_exists_by_font_id(self, font_id):
-        try:
-            if self.find_by_font_id(font_id).one() is not None:
-                return True
-        except:
+        if self.find_by_font_id(font_id).first() is None:
             return False
+        else:
+            return True
 
-    def update_all(self, update_list):
-        self.find_all().update(update_list)
-        db_session.commit()
+    def update_all(self, update_data):
+        self.find_all().update(update_data)
 
-    def update_by_font_id(self, font_id, update_list):
-        self.find_by_font_id(font_id).update(update_list)
+    def update_by_font_id(self, font_id, update_data):
+        self.find_by_font_id(font_id).update(update_data)
         db_session.commit()

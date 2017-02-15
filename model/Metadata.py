@@ -16,5 +16,7 @@ class Metadata(Base):
 
     metadata_id = Column(Integer, primary_key=True)
     font_id = Column(Integer, nullable=False)
-    latest_tag_url = Column(String(200), nullable=False)
-    tags_url = Column(String(200), nullable=False)
+    default_fontface = Column(String(50), nullable=False)
+    download_url = Column(String(200), nullable=True)
+    license = Column(String(50), nullable=False)
+    version = Column(String(20), nullable=True)

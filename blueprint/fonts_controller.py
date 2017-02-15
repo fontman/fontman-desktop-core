@@ -5,13 +5,12 @@ Provides fonts REST API for Fontman client GUI
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 6/1/2017
 """
 
-from consumer import FontsConsumer
 from service import FontFaceService
 from service import FontService
+from service import LanguageService
 from service import MetadataService
 from utility import FontManager
 
-import time
 from flask import Blueprint, jsonify, request
 
 fonts_blueprint = Blueprint("fonts_blueprint", __name__)
@@ -23,14 +22,14 @@ def find_all_fonts():
     fonts = FontService().find_all()
 
     for font in fonts:
+        metadata = MetadataService().find_by_font_id(font.font_id)
         fontfaces = FontFaceService().find_by_font_id(font.font_id)
+        languages = LanguageService().find_by_font_id(font.font_id)
+
         fontfaces_list = []
-        regular_fontface = None
+        languages_list = []
 
         for fontface in fontfaces:
-            if "regular" in fontface.fontface.lower():
-                regular_fontface = fontface.fontface
-
             fontfaces_list.append(
                 {
                     "fontface": fontface.fontface,
@@ -38,18 +37,19 @@ def find_all_fonts():
                 }
             )
 
+        for language in languages:
+            languages_list.append(language.language)
+
         response_data.append(
             {
                 "font_id": font.font_id,
-                "channel_id": font.channel_id,
                 "chosen": font.is_chosen,
+                "default_fontface": metadata.default_fontface,
                 "displayText": font.name,
                 "fontfaces": fontfaces_list,
                 "is_installed": font.is_installed,
-                "name": font.name,
-                "selectedFontface": regular_fontface,
-                "type": font.type,
-                "is_upgradable": font.is_upgradable
+                "is_upgradable": font.is_upgradable,
+                "name": font.name
             }
         )
 
@@ -64,51 +64,9 @@ def find_chosen_fonts_status():
         return jsonify(True)
 
 
-@fonts_blueprint.route("/fonts/<font_id>")
-def find_by_font_id(font_id):
-    font = FontService().find_by_font_id(font_id).first()
-    return jsonify(
-        {
-            "font_id": font.font_id,
-            "channel_id": font.channel_id,
-            "is_installed": font.is_installed,
-            "name": font.name,
-            "type": font.type,
-            "is_upgradable": font.is_upgradable
-        }
-    )
-
-
-@fonts_blueprint.route("/fonts/<font_id>/releases")
-def find_tags_by_font_id(font_id):
-    response = []
-    rel_info = FontsConsumer().consume_releases(font_id)
-
-    for release in rel_info:
-        response.append(
-            {
-                "id": release["id"],
-                "tag_name": release["tag_name"]
-            }
-        )
-
-    return jsonify(response)
-
-
-@fonts_blueprint.route("/fonts/<font_id>/install/<rel_id>")
-def install_font_by_font_id(font_id, rel_id):
-    response = FontManager().install_font(font_id, rel_id)
-    return jsonify(response)
-
-
-@fonts_blueprint.route("/fonts/<font_id>/reinstall/<rel_id>")
-def reinstall_font_by_font_id(font_id, rel_id):
-    response = False
-
-    if FontManager().remove_font(font_id):
-        time.sleep(0.5)
-        response = FontManager().install_font(font_id, rel_id)
-
+@fonts_blueprint.route("/fonts/<font_id>/install")
+def install_font_by_font_id(font_id):
+    response = FontManager().install_font(font_id)
     return jsonify(response)
 
 
@@ -155,20 +113,6 @@ def find_by_query():
 
     except:
         return jsonify({"error": "Invalid request"})
-
-
-@fonts_blueprint.route("/fonts/<font_id>/metadata")
-def find_metadata_by_font_id(font_id):
-    metadata = MetadataService().find_by_font_id(font_id).first()
-
-    return jsonify(
-        {
-            "metadata_id": metadata.metadata_id,
-            "font_id": metadata.font_id,
-            "latest_tag_url": metadata.latest_tag_url,
-            "tags_url": metadata.tags_url
-        }
-    )
 
 
 @fonts_blueprint.route("/fonts/update", methods=["POST"])

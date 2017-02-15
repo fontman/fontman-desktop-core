@@ -8,7 +8,6 @@ Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 2/12/2016
 
 from consumer import FontFacesConsumer
 from consumer import FontsConsumer
-from consumer import ChannelsConsumer
 from service import FontFaceService
 from service import FontService
 from service import InstalledFontService
@@ -17,28 +16,10 @@ from service import MetadataService
 
 class CacheManager:
 
-    def find_changes(self, local_tb_ids, remote_tb_ids):
-        new_list = []
-        removal_list = []
-        update_list = []
-
-        for id in local_tb_ids:
-            if id in remote_tb_ids:
-                update_list.append(id)
-            else:
-                removal_list.append(id)
-
-        for id in update_list:
-            if id not in remote_tb_ids:
-                new_list.append(id)
-
-        return new_list, removal_list, update_list
-
     def add_new_fontfaces(self, new_fontfaces):
         for fontface in new_fontfaces:
             FontFaceService().add_new(
                 fontface["fontface_id"],
-                fontface["download_url"],
                 fontface["font_id"],
                 fontface["fontface"],
                 fontface["resource_path"]
@@ -47,74 +28,48 @@ class CacheManager:
     def add_new_font(self, font_id):
         new_font = FontsConsumer().consume_by_font_id(font_id)
         new_fontfaces = FontFacesConsumer().consume_by_query(font_id)
-        new_metadata = FontsConsumer().consume_metadata_by_font_id(font_id)
 
         FontService().add_new(
             new_font["font_id"],
-            new_font["channel_id"],
-            new_font["name"],
-            new_font["type"]
+            new_font["name"]
         )
-        self.add_new_fontfaces(new_fontfaces)
-        self.add_new_metadata(new_metadata)
-
-    def add_new_metadata(self, metadata):
 
         MetadataService().add_new(
-            metadata["font_id"],
-            metadata["latest_tag_url"],
-            metadata["tags_url"]
+            new_font["metadata_id"],
+            new_font["font_id"],
+            new_font["default_fontface"],
+            new_font["download_url"],
+            new_font["license"],
+            new_font["version"]
         )
 
-    def gather_font_updates(self):
-        font_ids = FontService().find_all_font_ids()
+        self.add_new_fontfaces(new_fontfaces)
 
-        for font_id in font_ids:
-            font_data = FontService().find_by_font_id(font_id).first()
+    def update_font_cache(self):
+        update_list = FontsConsumer().consume_all_fonts()
 
-            if font_data.is_installed:
-                latest_rel_data = FontsConsumer().consume_latest_rel_info(
-                    font_id
+        for font_id in update_list:
+            font_data = FontsConsumer().consume_by_font_id(font_id)
+
+            if FontService().is_exists_by_font_id(font_id):
+                MetadataService().update_by_font_id(
+                    font_id,
+                    {
+                        "download_url": font_data["download_data"],
+                        "version": font_data["version"]
+                    }
                 )
-                if latest_rel_data["tag_name"] not in InstalledFontService(
-                ).find_by_font_id(font_id).first()["version"]:
-                    FontService().update_by_font_id(
-                        font_id,
-                        {
-                            "is_upgradable": True
-                        }
-                    )
 
-    def update_fonts_cache(self):
-        local_id_list = FontService().find_all_font_ids()
-        remote_id_list = FontsConsumer().consume_all_fonts()
+                installed_font = InstalledFontService().find_by_font_id(font_id)
+                if installed_font.first() is not None:
+                    if installed_font.version != font_data["version"]:
+                        FontService().update_by_font_id(
+                            font_id,
+                            {
+                                "is_upgradable": True
+                            }
+                        )
 
-        if local_id_list.first() is None and remote_id_list is not []:
-            for font_id in remote_id_list:
-                self.add_new_font(font_id)
+                continue
 
-        elif local_id_list.first() is not None and remote_id_list is not []:
-            new_list, removal_list, update_list = self.find_changes(
-                local_id_list, remote_id_list
-            )
-
-            if new_list is not []:
-                for font_id in new_list:
-                    self.add_new_font(font_id)
-
-            if update_list is not []:
-                for font_id in update_list:
-                    font_data = FontsConsumer().consume_by_font_id(font_id)
-                    FontService().update_by_font_id(
-                        font_id,
-                        {
-                            "name": font_data["name"],
-                            "type": font_data["type"]
-                        }
-                    )
-
-                    FontFaceService().delete_by_font_id(font_id)
-                    self.add_new_fontfaces(
-                        FontFacesConsumer().consume_by_query(font_id)
-                    )
-
+            self.add_new_font(font_id)

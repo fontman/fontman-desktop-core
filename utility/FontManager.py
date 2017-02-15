@@ -9,6 +9,7 @@ from consumer import FontsConsumer
 from service import FontFileService
 from service import FontService
 from service import InstalledFontService
+from service import MetadataService
 from service import SystemService
 from utility import FileManager
 
@@ -118,59 +119,53 @@ class FontManager:
         artifacts_dir = "./data/" + font_id + "/extracted"
         FileManager().create_directory(artifacts_dir)
 
-        release_data = FontsConsumer().consume_rel_info(
-            font_id, rel_id
+        font_data = FontService().find_by_font_id(font_id).first()
+        metadata = MetadataService().find_by_font_id(font_id).first()
+
+        FileManager().download_file(
+            font_dir + "/" + font_data.name,
+            metadata.download_url
         )
 
-        for asset in release_data["assets"]:
-            if "application/zip" in asset["content_type"]:
-                FileManager().download_file(
-                    font_dir + "/" + asset["name"],
-                    asset["browser_download_url"]
-                )
+        FileManager().extract_file(
+            font_dir + "/" + font_data.name,
+            artifacts_dir
+        )
 
-                FileManager().extract_file(
-                    font_dir + "/" + asset["name"],
-                    artifacts_dir
-                )
+        fontfaces = find_files_by_extension(artifacts_dir, ".otf")
 
-                fontfaces = find_files_by_extension(artifacts_dir, ".ttf")
+        if fontfaces is []:
+            fontfaces = find_files_by_extension(
+                artifacts_dir, ".ttf"
+            )
 
-                if fontfaces is []:
-                    fontfaces = find_files_by_extension(
-                        artifacts_dir, ".otf"
-                    )
-
-                for fontface in fontfaces:
-                    if "Windows" in self.__system.platform:
-                        fixed_install_font(fontface["file_path"])
-
-                    else:
-                        FileManager().move_file(
-                            fontface["name"],
-                            sys_font_dir,
-                            fontface["file_path"]
-                        )
-
-                    FontFileService().add_new(fontface["name"], font_id)
-
-                FontService().update_by_font_id(
-                    font_id,
-                    {
-                        "is_installed": True
-                    }
-                )
-
-                InstalledFontService().add_new(
-                    font_id, release_data["tag_name"]
-                )
-
-                FileManager().remove_directory(font_dir)
-                return True
+        for fontface in fontfaces:
+            if "Windows" in self.__system.platform:
+                fixed_install_font(fontface["file_path"])
 
             else:
-                return {"error": "Please ask maintainer to do a Fontman "
-                                 "specific packaging"}
+                FileManager().move_file(
+                    fontface["name"],
+                    sys_font_dir,
+                    fontface["file_path"]
+                )
+
+            FontFileService().add_new(fontface["name"], font_id)
+
+        FontService().update_by_font_id(
+            font_id,
+            {
+                "is_installed": True
+            }
+        )
+
+        InstalledFontService().add_new(
+            font_id, metadata.version
+        )
+
+        FileManager().remove_directory(font_dir)
+
+        return True
 
     def remove_font(self, font_id):
         font_files = FontFileService().find_all_by_font_id(font_id)
