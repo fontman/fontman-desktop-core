@@ -84,19 +84,6 @@ class FontManager:
 
             for element in font_data:
                 if font_info[0] == element["name"]:
-                    trigger2 = True
-
-                    for fontface in element["fontfaces"]:
-                        if font_info[1] == fontface["fontface"]:
-                            trigger2 = False
-                            break
-
-                    if trigger2:
-                        element["fontfaces"].append({
-                            "fontface": font_info[1],
-                            "resource_path": font["file_path"]
-                        })
-
                     trigger = False
                     break
 
@@ -104,11 +91,8 @@ class FontManager:
                 font_data.append({
                     "name": font_info[0],
                     "displayText": font_info[0],
-                    "selectedFontface": "Regular",
-                    "fontfaces": [{
-                        "fontface": font_info[1],
-                        "resource_path": font["file_path"]
-                    }]
+                    "fontface": font_info[0] + "-Regular",
+                    "resource_path": font["file_path"]
                 })
 
         return font_data

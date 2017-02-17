@@ -42,13 +42,13 @@ def find_all_fonts():
 
         response_data.append(
             {
-                "font_id": font.font_id,
-                "chosen": font.is_chosen,
-                "default_fontface": metadata.default_fontface,
+                "fontId": font.font_id,
+                "isChosen": font.is_chosen,
+                "defaultFontface": metadata.default_fontface,
                 "displayText": font.name,
                 "fontfaces": fontfaces_list,
-                "is_installed": font.is_installed,
-                "is_upgradable": font.is_upgradable,
+                "isInstalled": font.is_installed,
+                "isUpgradable": font.is_upgradable,
                 "name": font.name
             }
         )
@@ -79,14 +79,14 @@ def find_by_query():
             chosen_fonts = FontService().find_all_chosen()
 
             for font in chosen_fonts:
+                metadata = MetadataService().find_by_font_id(font.font_id).first()
                 fontfaces = FontFaceService().find_by_font_id(font.font_id)
+                languages = LanguageService().find_by_font_id(font.font_id)
+
                 fontfaces_list = []
-                regular_fontface = None
+                languages_list = []
 
                 for fontface in fontfaces:
-                    if "regular" in fontface.fontface.lower():
-                        regular_fontface = fontface.fontface
-
                     fontfaces_list.append(
                         {
                             "fontface": fontface.fontface,
@@ -94,18 +94,19 @@ def find_by_query():
                         }
                     )
 
+                for language in languages:
+                    languages_list.append(language.language)
+
                 response_data.append(
                     {
-                        "font_id": font.font_id,
-                        "channel_id": font.channel_id,
-                        "chosen": font.is_chosen,
+                        "fontId": font.font_id,
+                        "isChosen": font.is_chosen,
+                        "defaultFontface": metadata.default_fontface,
                         "displayText": font.name,
                         "fontfaces": fontfaces_list,
-                        "is_installed": font.is_installed,
-                        "name": font.name,
-                        "selectedFontface": regular_fontface,
-                        "type": font.type,
-                        "is_upgradable": font.is_upgradable
+                        "isInstalled": font.is_installed,
+                        "isUpgradable": font.is_upgradable,
+                        "name": font.name
                     }
                 )
 
@@ -126,6 +127,7 @@ def update_all_fonts():
 @fonts_blueprint.route("/fonts/<font_id>/update", methods=["POST"])
 def update_font_by_font_id(font_id):
     json_data = request.json
+    print(json_data)
     FontService().update_by_font_id(font_id, json_data)
 
     return jsonify(True)
