@@ -74,8 +74,8 @@ class CacheManager:
                     }
                 )
 
-                installed_font = InstalledFontService().find_by_font_id(font_id)
-                if installed_font.first() is not None:
+                installed_font = InstalledFontService().find_by_font_id(font_id).first()
+                if installed_font is not None:
                     if installed_font.version != font_data["version"]:
                         FontService().update_by_font_id(
                             font_id,

@@ -5,7 +5,6 @@ Access system font library and manipulate.
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 28/12/2016
 """
 
-from consumer import FontsConsumer
 from service import FontFileService
 from service import FontService
 from service import InstalledFontService
@@ -97,7 +96,7 @@ class FontManager:
 
         return font_data
 
-    def install_font(self, font_id, rel_id):
+    def install_font(self, font_id):
         font_dir = "./data/" + font_id
         sys_font_dir = self.__system.font_directory
         artifacts_dir = "./data/" + font_id + "/extracted"
@@ -107,12 +106,12 @@ class FontManager:
         metadata = MetadataService().find_by_font_id(font_id).first()
 
         FileManager().download_file(
-            font_dir + "/" + font_data.name,
+            font_dir + "/" + font_data.name + ".zip",
             metadata.download_url
         )
 
         FileManager().extract_file(
-            font_dir + "/" + font_data.name,
+            font_dir + "/" + font_data.name + ".zip",
             artifacts_dir
         )
 
@@ -122,6 +121,8 @@ class FontManager:
             fontfaces = find_files_by_extension(
                 artifacts_dir, ".ttf"
             )
+
+        print(fontfaces)
 
         for fontface in fontfaces:
             if "Windows" in self.__system.platform:

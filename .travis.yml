@@ -15,6 +15,7 @@ before_install:
 - pip3 install -r requirements.txt
 - pip3 install pyinstaller
 - pyinstaller --onefile core-runnner.py
+- chmod +x dist/core-runnner
 - tar -zcvf dist/core-runnner-darwin-x64.tar.gz dist/core-runnner
 - ls dist/
 install: true

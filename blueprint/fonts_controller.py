@@ -49,7 +49,9 @@ def find_all_fonts():
                 "fontfaces": fontfaces_list,
                 "isInstalled": font.is_installed,
                 "isUpgradable": font.is_upgradable,
-                "name": font.name
+                "license": metadata.license,
+                "name": font.name,
+                "version": metadata.version
             }
         )
 
@@ -70,6 +72,21 @@ def install_font_by_font_id(font_id):
     return jsonify(response)
 
 
+@fonts_blueprint.route("/fonts/<font_id>/remove")
+def remove_font_by_font_id(font_id):
+    FontManager().remove_font(font_id)
+
+    return jsonify(True)
+
+
+@fonts_blueprint.route("/fonts/<font_id>/update", methods=["POST"])
+def update_font_by_font_id(font_id):
+    json_data = request.json
+    FontService().update_by_font_id(font_id, json_data)
+
+    return jsonify(True)
+
+
 @fonts_blueprint.route("/fonts/")
 def find_by_query():
     response_data = []
@@ -79,14 +96,18 @@ def find_by_query():
             chosen_fonts = FontService().find_all_chosen()
 
             for font in chosen_fonts:
-                metadata = MetadataService().find_by_font_id(font.font_id).first()
                 fontfaces = FontFaceService().find_by_font_id(font.font_id)
                 languages = LanguageService().find_by_font_id(font.font_id)
+                metadata = MetadataService().find_by_font_id(font.font_id).first()
 
+                default_resource = ""
                 fontfaces_list = []
                 languages_list = []
 
                 for fontface in fontfaces:
+                    if "Regular" in fontface.fontface:
+                        default_resource = fontface.resource_path
+
                     fontfaces_list.append(
                         {
                             "fontface": fontface.fontface,
@@ -101,7 +122,8 @@ def find_by_query():
                     {
                         "fontId": font.font_id,
                         "isChosen": font.is_chosen,
-                        "defaultFontface": metadata.default_fontface,
+                        "defaultFontface": font.name + "-" + metadata.default_fontface,
+                        "defaultResource": default_resource,
                         "displayText": font.name,
                         "fontfaces": fontfaces_list,
                         "isInstalled": font.is_installed,
@@ -122,12 +144,3 @@ def update_all_fonts():
     FontService().update_all(json_data)
 
     return jsonify(json_data)
-
-
-@fonts_blueprint.route("/fonts/<font_id>/update", methods=["POST"])
-def update_font_by_font_id(font_id):
-    json_data = request.json
-    print(json_data)
-    FontService().update_by_font_id(font_id, json_data)
-
-    return jsonify(True)
