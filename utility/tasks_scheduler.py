@@ -13,12 +13,12 @@ import time
 
 
 def run_tasks():
-    print("Preparing for updating font cache")
-    FileManager().create_file("./db.lock", "on")
-    time.sleep(5)
-
     while True:
-        CacheManager().update_font_cache()
+        print("Preparing to update font cache")
 
-        FileManager().remove_file("./db.lock")
-        time.sleep(int(SystemService().find_system_info().refresh_rate) * 60)
+        FileManager().create_file("./data/db.lock", "on")
+        time.sleep(5)
+        CacheManager().update_font_cache()
+        FileManager().remove_file("./data/db.lock")
+
+        time.sleep(int(SystemService().find_system_info().refresh_rate) * 60 * 60)

@@ -5,6 +5,7 @@ fontman client font management system main application script.
 Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 3/12/2016
 """
 
+
 from blueprint import auth_blueprint
 from blueprint import collections_blueprint
 from blueprint import fontfaces_blueprint

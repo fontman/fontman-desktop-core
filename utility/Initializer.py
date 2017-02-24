@@ -48,4 +48,3 @@ def initialize():
         getpass.getuser(),
         version
     )
-

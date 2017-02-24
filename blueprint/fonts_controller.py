@@ -18,6 +18,13 @@ fonts_blueprint = Blueprint("fonts_blueprint", __name__)
 
 @fonts_blueprint.route("/fonts")
 def find_all_fonts():
+    display_texts = [
+        "Nymphs blitz quick vex dwarf jog.",
+        "DJs flock by when MTV ax quiz prog.",
+        "Big fjords vex quick waltz nymph.",
+        "Junk MTV quiz graced by fox whelps.",
+        "Vamp fox held quartz duck just by wing."
+    ]
     response_data = []
     fonts = FontService().find_all()
 
@@ -45,13 +52,15 @@ def find_all_fonts():
                 "fontId": font.font_id,
                 "isChosen": font.is_chosen,
                 "defaultFontface": metadata.default_fontface,
-                "displayText": font.name,
+                "displayText": display_texts[font.font_id // 5],
                 "fontfaces": fontfaces_list,
                 "isInstalled": font.is_installed,
                 "isUpgradable": font.is_upgradable,
                 "license": metadata.license,
                 "name": font.name,
-                "version": metadata.version
+                "textSize": 25,
+                "version": metadata.version,
+                "viewId": {"id": 2}
             }
         )
 
