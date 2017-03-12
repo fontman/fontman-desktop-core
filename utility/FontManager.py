@@ -175,3 +175,7 @@ class FontManager:
 
         except:
             return {"error": "Error while removing font"}
+
+    def update_font(self, font_id):
+        self.remove_font(font_id)
+        self.install_font(font_id)

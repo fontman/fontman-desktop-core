@@ -3,7 +3,7 @@
 High level functions to manipulate data related to installed fonts information
 in database.
 
-Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 2/12/2016
+Created by Lahiru Pathirage @ Mooniak <lpsandaruwan@gmail.com> on 2/12/2016
 """
 
 from model import InstalledFont

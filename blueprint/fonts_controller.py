@@ -2,11 +2,12 @@
 
 Provides fonts REST API for Fontman client GUI
 
-Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 6/1/2017
+Created by Lahiru Pathirage @ Mooniak <lpsandaruwan@gmail.com> on 6/1/2017
 """
 
 from service import FontFaceService
 from service import FontService
+from service import InstalledFontService
 from service import LanguageService
 from service import MetadataService
 from utility import FontManager
@@ -88,6 +89,13 @@ def remove_font_by_font_id(font_id):
     return jsonify(True)
 
 
+@fonts_blueprint.route("/fonts/<font_id>/update/installed")
+def update_installed_font(font_id):
+    FontManager().update_font(font_id)
+
+    return jsonify(True)
+
+
 @fonts_blueprint.route("/fonts/<font_id>/update", methods=["POST"])
 def update_font_by_font_id(font_id):
     json_data = request.json
@@ -98,11 +106,10 @@ def update_font_by_font_id(font_id):
 
 @fonts_blueprint.route("/fonts/")
 def find_by_query():
-    response_data = []
-
     try:
         if request.args.get("is_chosen"):
             chosen_fonts = FontService().find_all_chosen()
+            response_data = []
 
             for font in chosen_fonts:
                 fontfaces = FontFaceService().find_by_font_id(font.font_id)
@@ -137,6 +144,41 @@ def find_by_query():
                         "fontfaces": fontfaces_list,
                         "isInstalled": font.is_installed,
                         "isUpgradable": font.is_upgradable,
+                        "name": font.name
+                    }
+                )
+
+            return jsonify(response_data)
+
+        elif request.args.get("upgradable"):
+            upgradable_fonts = FontService().find_all_upgradable()
+            response_data = []
+
+            if upgradable_fonts.first() is None:
+                return jsonify(False)
+
+            for font in upgradable_fonts:
+                fontfaces = FontFaceService().find_by_font_id(font.font_id)
+                languages = LanguageService().find_by_font_id(font.font_id)
+                metadata = MetadataService().find_by_font_id(font.font_id).first()
+
+                default_resource = ""
+                languages_list = []
+
+                for fontface in fontfaces:
+                    if "Regular" in fontface.fontface:
+                        default_resource = fontface.resource_path
+
+                for language in languages:
+                    languages_list.append(language.language)
+
+                response_data.append(
+                    {
+                        "fontId": font.font_id,
+                        "defaultFontface": font.name + "-" + metadata.default_fontface,
+                        "defaultResource": default_resource,
+                        "installedVersion": InstalledFontService().find_by_font_id(font.font_id).first().version,
+                        "latestVersion": metadata.version,
                         "name": font.name
                     }
                 )

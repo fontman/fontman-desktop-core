@@ -2,7 +2,7 @@
 
 CRUD operations on font metadata.
 
-Created by Lahiru Pathirage @ Mooniak<lpsandaruwan@gmail.com> on 16/1/2017
+Created by Lahiru Pathirage @ Mooniak <lpsandaruwan@gmail.com> on 16/1/2017
 """
 
 from model import Metadata
